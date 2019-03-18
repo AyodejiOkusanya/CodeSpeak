@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@typescript-eslint/parser": "^1.4.2",
+    "fuzzyset.js": "0.0.8",
     "react": "^16.8.4",
     "react-ace": "^6.4.0",
     "react-dom": "^16.8.4",
@@ -12,7 +13,8 @@
     "react-scripts": "2.1.8",
     "react-speech-recognition": "^1.0.7",
     "react-typist": "^2.0.5",
-    "semantic-ui-react": "^0.86.0"
+    "semantic-ui-react": "^0.86.0",
+    "soundex-phonetics": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

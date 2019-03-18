@@ -3,7 +3,8 @@ import CodeSnippet from './CodeSnippet'
 import Button from './Button'
 import brace from 'brace'
 import AceEditor from 'react-ace'
-
+import FuzzySet from 'fuzzyset.js'
+import Soundex from 'soundex-phonetics'
 import 'brace/mode/javascript'
 import 'brace/theme/monokai'
 
@@ -21,12 +22,6 @@ class CodeContainer extends React.Component {
     console.log("Welcome to CodeSpeak")
   }`,
     keywords: []
-  }
-
-  
-
-  returnKeyWord = word => {
-    this.keywords.push(word)
   }
 
   handleListen = () => {
@@ -56,9 +51,23 @@ class CodeContainer extends React.Component {
           finalTranscript += transcript + ' '
         }
       }
+      let fTArray = finalTranscript.split(' ').map((word) => {
+        // console.log(this.fuzzyMatchBox.get(word)[1] )
+        return this.fuzzyMatchBox.get(word) ? this.fuzzyMatchBox.get(word)[0][1] : word 
+      })
+
+      let completeTranscript = fTArray.join(' ')
+      // if (Soundex('for loop')=== Soundex('phone')) {
+      //   console.log('yes')
+      // } else {
+      //   console.log('no')
+      // }
       console.log(finalTranscript)
+      console.log(completeTranscript)
       // this.setState({ codeText: finalTranscript }, this.addTexttoTextArray)
+      // this.addContentToState(completeTranscript)
       this.addContentToState(finalTranscript)
+
     }
   }
   toggleListen = () => {
@@ -75,20 +84,22 @@ class CodeContainer extends React.Component {
   }
 
   forLoop = () => {
-    return ` \n for (let i = 0; i < n; i++) {   }`
+    return ` \n for (let i = 0; i < n; i++) {   } \n`
   }
 
   classFn = title => {
     let classTitle = title || `Enter name here`
 
-    return ` \n class ${classTitle} {   }`
+    return ` \n class ${classTitle} {   } \n`
   }
 
   arrowFn = name => {
     let arrowTitle = name ? `${name} = ` : ''
 
-    return ` \n ${arrowTitle}() => {   } `
+    return ` \n ${arrowTitle}() => {   } \n `
   }
+
+  fuzzyMatchBox = FuzzySet(['for','loop','class','arrow','function','clear'])
 
   injectNewCode = (text, keyWord, textArray) => {
     if (
@@ -106,18 +117,34 @@ class CodeContainer extends React.Component {
 
       console.log(`injectHere: ${injectHere}`)
       console.log(`contentArray:${this.state.content.split(' ')}`)
-     
 
-      return this.setState({
-        content: [
-          ...this.state.content.split(' ').slice(0, injectHere + 2),
-          this.returnCodeSnippetWithoutChangingState(parsedTranscript),
-          this.state.content.split(' ').slice(injectHere + 2)
-        ]
-          .join(' ')
-          .split(',')
-          .join(' ')
-      })
+      if (this.state.content.split(' ')[injectHere - 1] === 'class') {
+        return this.setState({
+          content: [
+            ...this.state.content.split(' ').slice(0, injectHere + 2),
+            this.returnCodeSnippetWithoutChangingState(parsedTranscript),
+            this.state.content.split(' ').slice(injectHere + 2)
+          ]
+            .join(' ')
+            .split(',')
+            .join(' ')
+        })
+      } else if (this.state.content.split(' ')[injectHere + 1] === '=') {
+        return this.setState({
+          content: [
+            ...this.state.content.split(' ').slice(0, injectHere + 7),
+            this.returnCodeSnippetWithoutChangingState(parsedTranscript),
+            this.state.content.split(' ').slice(injectHere + 7)
+          ]
+            .join(' ')
+            .split(',')
+            .join(' ')
+        })
+      }
+
+      
+
+      
     }
 
     return 'end'
@@ -142,6 +169,7 @@ class CodeContainer extends React.Component {
     } else if (text.includes('class') || text.includes('cross')) {
       let classTitle = textArray[textArray.indexOf('class') + 1]
       if (classTitle !== '') {
+        this.fuzzyMatchBox.add(classTitle)
         this.setState({ keywords: [...this.state.keywords, classTitle] })
       }
 
@@ -151,6 +179,7 @@ class CodeContainer extends React.Component {
     } else if (text.includes('arrow') && text.includes('function')) {
       let functionName = textArray[textArray.indexOf('function') + 1]
       if (functionName !== '') {
+        this.fuzzyMatchBox.add(functionName)
         this.setState({ keywords: [...this.state.keywords, functionName] })
       }
 
@@ -190,22 +219,6 @@ class CodeContainer extends React.Component {
     }
   }
 
-  renderCodeSnippets = () => {
-    return this.state.textArray.map(text => {
-      return this.keywords.find(word => {
-        return text.includes(word)
-      }) ? (
-        <CodeSnippet
-            flag={'here'}
-            codeText={text}
-            returnKeyWord={this.returnKeyWord}
-          />
-        ) : (
-          <CodeSnippet codeText={text} returnKeyWord={this.returnKeyWord} />
-        )
-    })
-  }
-
   render () {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -219,7 +232,7 @@ class CodeContainer extends React.Component {
           fontSize={14}
           showPrintMargin
           showGutter
-          highlightActiveLine
+          highlightActiveLine={true}
           value={this.state.content}
           setOptions={{
             enableBasicAutocompletion: false,
@@ -230,7 +243,6 @@ class CodeContainer extends React.Component {
           }}
         />
 
-        
         <Button toggleListen={this.toggleListen} />
       </div>
     )
