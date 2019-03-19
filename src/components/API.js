@@ -16,12 +16,14 @@ class API {
     }
 
     static get(url) {
-        fetch (url, {
+        return fetch (url, {
             headers:{
                 'Authorization': localStorage.getItem('token')
             }
         }).then(resp => resp.json())
     }
 }
+
+window.API = API 
 
 export default API 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Form, Segment, Divider, Checkbox } from 'semantic-ui-react'
+import API from './API';
 
 class SignInPage extends React.Component {
 
@@ -9,7 +10,17 @@ class SignInPage extends React.Component {
     }
 
     handleSubmit = (event) => {
-        this.props.signIn(this.state.username, this.state.password)
+        event.preventDefault(); 
+        const {signIn, history} = this.props
+        const user = this.state 
+        API.signin(user).then(data => {
+            if (data.error) {
+                alert('something is wrong')
+            } else {
+                signIn(data)
+                history.push('/snippets')
+            }
+        })
     }
 
     handleChange = (event) => {
