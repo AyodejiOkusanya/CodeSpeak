@@ -1,12 +1,11 @@
 import React from 'react'
-import CodeSnippet from './CodeSnippet'
 import Button from './Button'
 import brace from 'brace'
 import AceEditor from 'react-ace'
 import FuzzySet from 'fuzzyset.js'
 import Soundex from 'soundex-phonetics'
 import 'brace/mode/javascript'
-import 'brace/theme/monokai'
+import 'brace/theme/solarized_dark'
 
 const SpeechRecognition = window.webkitSpeechRecognition
 const recognition = new SpeechRecognition()
@@ -51,9 +50,11 @@ class CodeContainer extends React.Component {
           finalTranscript += transcript + ' '
         }
       }
-      let fTArray = finalTranscript.split(' ').map((word) => {
+      let fTArray = finalTranscript.split(' ').map(word => {
         // console.log(this.fuzzyMatchBox.get(word)[1] )
-        return this.fuzzyMatchBox.get(word) ? this.fuzzyMatchBox.get(word)[0][1] : word 
+        return this.fuzzyMatchBox.get(word)
+          ? this.fuzzyMatchBox.get(word)[0][1]
+          : word
       })
 
       let completeTranscript = fTArray.join(' ')
@@ -64,10 +65,8 @@ class CodeContainer extends React.Component {
       // }
       console.log(finalTranscript)
       console.log(completeTranscript)
-      // this.setState({ codeText: finalTranscript }, this.addTexttoTextArray)
       // this.addContentToState(completeTranscript)
       this.addContentToState(finalTranscript)
-
     }
   }
   toggleListen = () => {
@@ -89,7 +88,9 @@ class CodeContainer extends React.Component {
 
   classFn = title => {
     let classTitle = title || `Enter name here`
-
+    let classTitleArray = classTitle.split('')
+    classTitleArray[0] = classTitleArray[0].toUpperCase() 
+    classTitle = classTitleArray.join('')
     return ` \n class ${classTitle} {   } \n`
   }
 
@@ -99,18 +100,32 @@ class CodeContainer extends React.Component {
     return ` \n ${arrowTitle}() => {   } \n `
   }
 
-  fuzzyMatchBox = FuzzySet(['for','loop','class','arrow','function','clear'])
+  normalFn = name => {
+    let normalTitle = name ? `${name}` : ''
+
+    return `\n function ${normalTitle} () {   } \n`
+  }
+
+  fuzzyMatchBox = FuzzySet([
+    'for',
+    'loop',
+    'class',
+    'function',
+    'clear'
+  ])
 
   injectNewCode = (text, keyWord, textArray) => {
+    let lowerKeyWord = keyWord
     if (
       this.state.keywords.find(word => {
         keyWord = word
-        return text.includes(word)
+        lowerKeyWord = word.toLowerCase() 
+        return text.includes(lowerKeyWord)
       })
     ) {
       console.log('i ran')
       console.log('inside', `keyword is ${keyWord}`)
-      let keyWordIndex = textArray.indexOf(keyWord)
+      let keyWordIndex = textArray.indexOf(lowerKeyWord)
       let parsedTranscript = textArray.slice(0, keyWordIndex).join(' ')
 
       let injectHere = this.state.content.split(' ').indexOf(keyWord)
@@ -140,11 +155,18 @@ class CodeContainer extends React.Component {
             .split(',')
             .join(' ')
         })
+      } else if (this.state.content.split(' ')[injectHere - 1] === 'function') {
+        return this.setState({
+          content: [
+            ...this.state.content.split(' ').slice(0, injectHere + 4),
+            this.returnCodeSnippetWithoutChangingState(parsedTranscript),
+            this.state.content.split(' ').slice(injectHere + 4)
+          ]
+            .join(' ')
+            .split(',')
+            .join(' ')
+        })
       }
-
-      
-
-      
     }
 
     return 'end'
@@ -170,6 +192,11 @@ class CodeContainer extends React.Component {
       let classTitle = textArray[textArray.indexOf('class') + 1]
       if (classTitle !== '') {
         this.fuzzyMatchBox.add(classTitle)
+        let classTitleArray = classTitle.split('')
+        classTitleArray[0] = classTitleArray[0].toUpperCase() 
+        classTitle = classTitleArray.join('')
+    
+
         this.setState({ keywords: [...this.state.keywords, classTitle] })
       }
 
@@ -188,6 +215,16 @@ class CodeContainer extends React.Component {
       })
     } else if (text.includes('clear')) {
       this.setState({ content: '', keywords: [] })
+    } else if (text.includes('function')) {
+      let functionName = textArray[textArray.indexOf('function') + 1]
+
+      if (functionName !== '') {
+        this.setState({ keywords: [...this.state.keywords, functionName] })
+      }
+
+      return this.setState({
+        content: this.state.content + '\n' + this.normalFn(functionName)
+      })
     }
   }
 
@@ -206,7 +243,13 @@ class CodeContainer extends React.Component {
       return this.forLoop()
     } else if (text.includes('class') || text.includes('cross')) {
       let classTitle = textArray[textArray.indexOf('class') + 1]
+      if (classTitle !== '') {
+        let classTitleArray = classTitle.split('')
+      classTitleArray[0] = classTitleArray[0].toUpperCase() 
+      classTitle = classTitleArray.join('')
+  
       this.setState({ keywords: [...this.state.keywords, classTitle] })
+      }
 
       return this.classFn(classTitle)
     } else if (text.includes('arrow') && text.includes('function')) {
@@ -216,6 +259,10 @@ class CodeContainer extends React.Component {
       return this.arrowFn(functionName)
     } else if (text.includes('clear')) {
       return this.setState({ content: '' })
+    } else if (text.includes('function')) {
+      let functionName = textArray[textArray.indexOf('function') + 1]
+      this.setState({ keywords: [...this.state.keywords, functionName] })
+      return this.normalFn(functionName)
     }
   }
 
@@ -225,14 +272,14 @@ class CodeContainer extends React.Component {
         <AceEditor
           placeholder='Placeholder Text'
           mode='javascript'
-          theme='monokai'
+          theme='solarized_dark'
           name='blah2'
           onLoad={this.onLoad}
           onChange={this.onChange}
           fontSize={14}
           showPrintMargin
           showGutter
-          highlightActiveLine={true}
+          highlightActiveLine
           value={this.state.content}
           setOptions={{
             enableBasicAutocompletion: false,

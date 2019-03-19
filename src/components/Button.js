@@ -3,9 +3,9 @@ import React from 'react'
 class Button extends React.Component {
   render () {
     return (
-      <button onClick={this.props.toggleListen}>
+      <button style={{backgroundColor:'black', border:'none'}} onClick={this.props.toggleListen}>
       
-        <img src={require('../images/microphone.jpeg')} />
+        <img style={{backgroundColor:'black'}} src={require('../images/microphone.jpeg')} />
       </button>
     )
   }
