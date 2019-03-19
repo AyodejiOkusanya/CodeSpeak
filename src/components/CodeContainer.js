@@ -6,6 +6,7 @@ import FuzzySet from 'fuzzyset.js'
 import Soundex from 'soundex-phonetics'
 import 'brace/mode/javascript'
 import 'brace/theme/solarized_dark'
+import SaveButton from './SaveButton';
 
 const SpeechRecognition = window.webkitSpeechRecognition
 const recognition = new SpeechRecognition()
@@ -21,6 +22,10 @@ class CodeContainer extends React.Component {
     console.log("Welcome to CodeSpeak")
   }`,
     keywords: []
+  }
+
+  onChange = event => {
+    this.setState({ content: event })
   }
 
   handleListen = () => {
@@ -89,7 +94,7 @@ class CodeContainer extends React.Component {
   classFn = title => {
     let classTitle = title || `Enter name here`
     let classTitleArray = classTitle.split('')
-    classTitleArray[0] = classTitleArray[0].toUpperCase() 
+    classTitleArray[0] = classTitleArray[0].toUpperCase()
     classTitle = classTitleArray.join('')
     return ` \n class ${classTitle} {   } \n`
   }
@@ -106,20 +111,14 @@ class CodeContainer extends React.Component {
     return `\n function ${normalTitle} () {   } \n`
   }
 
-  fuzzyMatchBox = FuzzySet([
-    'for',
-    'loop',
-    'class',
-    'function',
-    'clear'
-  ])
+  fuzzyMatchBox = FuzzySet(['for', 'loop', 'class', 'function', 'clear'])
 
   injectNewCode = (text, keyWord, textArray) => {
     let lowerKeyWord = keyWord
     if (
       this.state.keywords.find(word => {
         keyWord = word
-        lowerKeyWord = word.toLowerCase() 
+        lowerKeyWord = word.toLowerCase()
         return text.includes(lowerKeyWord)
       })
     ) {
@@ -193,9 +192,8 @@ class CodeContainer extends React.Component {
       if (classTitle !== '') {
         this.fuzzyMatchBox.add(classTitle)
         let classTitleArray = classTitle.split('')
-        classTitleArray[0] = classTitleArray[0].toUpperCase() 
+        classTitleArray[0] = classTitleArray[0].toUpperCase()
         classTitle = classTitleArray.join('')
-    
 
         this.setState({ keywords: [...this.state.keywords, classTitle] })
       }
@@ -245,10 +243,10 @@ class CodeContainer extends React.Component {
       let classTitle = textArray[textArray.indexOf('class') + 1]
       if (classTitle !== '') {
         let classTitleArray = classTitle.split('')
-      classTitleArray[0] = classTitleArray[0].toUpperCase() 
-      classTitle = classTitleArray.join('')
-  
-      this.setState({ keywords: [...this.state.keywords, classTitle] })
+        classTitleArray[0] = classTitleArray[0].toUpperCase()
+        classTitle = classTitleArray.join('')
+
+        this.setState({ keywords: [...this.state.keywords, classTitle] })
       }
 
       return this.classFn(classTitle)
@@ -289,7 +287,7 @@ class CodeContainer extends React.Component {
             tabSize: 2
           }}
         />
-
+        <SaveButton snippet={this.state.content}/>
         <Button toggleListen={this.toggleListen} />
       </div>
     )

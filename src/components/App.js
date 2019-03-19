@@ -8,8 +8,7 @@ import Snippets from './Snippets'
 
 class App extends React.Component {
   state = {
-    username: '',
-    password: ''
+    username: ''
   }
 
   // signIn = (username, password) => {
@@ -18,7 +17,7 @@ class App extends React.Component {
 
   signIn = user => {
     localStorage.setItem('token', user.token)
-    this.setState({ username: user.name })
+    this.setState({ username: user.username })
   }
 
   signOut = () => {

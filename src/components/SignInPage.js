@@ -10,13 +10,14 @@ class SignInPage extends React.Component {
     }
 
     handleSubmit = (event) => {
-        event.preventDefault(); 
+        // event.preventDefault(); 
         const {signIn, history} = this.props
         const user = this.state 
         API.signin(user).then(data => {
             if (data.error) {
                 alert('something is wrong')
             } else {
+                // console.log('here')
                 signIn(data)
                 history.push('/snippets')
             }
