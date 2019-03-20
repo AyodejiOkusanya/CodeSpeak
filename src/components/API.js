@@ -8,11 +8,11 @@ class API {
   }
 
   static signup (user) {
-      return fetch('http://localhost:3000/users', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(user)
-      }).then(resp => resp.json())
+    return fetch('http://localhost:3000/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user)
+    }).then(resp => resp.json())
   }
 
   static validate () {
@@ -31,6 +31,12 @@ class API {
         Authorization: localStorage.getItem('token')
       },
       body: JSON.stringify(snippet)
+    })
+  }
+
+  static deleteSnippet (id) {
+    return fetch(`http://localhost:3000/snippets/${id}`, {
+      method: 'DELETE'
     })
   }
 

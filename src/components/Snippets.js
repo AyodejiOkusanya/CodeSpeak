@@ -12,6 +12,23 @@ class Snippets extends React.Component {
     return API.getSnippets().then(snippets => this.setState({ snippets }))
   }
 
+  handleDelete = (event) => {
+    console.log(event.target.id)
+    API.deleteSnippet(event.target.id)
+
+
+    let newSnippets = this.state.snippets.slice().filter((snip) => {
+      console.log(`the id is : ${event.target.id}, and the snip id is ${snip.id}`)
+        return snip.id.toString() !== event.target.id.toString() 
+    }) 
+
+    console.log(newSnippets)
+
+    this.setState({
+      snippets: newSnippets
+    })
+  }
+
   renderCodeSnippets = () => {
     return this.state.snippets.map(content => {
       console.log(content)
@@ -39,7 +56,7 @@ class Snippets extends React.Component {
               }}
             />
             <button style={{ marginTop: '10px' }}>Edit</button>
-            <button style={{ marginTop: '10px' }}>Delete</button>
+            <button id={content.id} style={{ marginTop: '10px' }} onClick={this.handleDelete}>Delete</button>
           </Grid.Column>
         </div>
         // </div>
