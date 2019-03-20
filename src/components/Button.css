@@ -9,6 +9,17 @@
 	outline: none;
 }
 
+.standardSaveButton {
+	width: 100px;
+	height: 100px;
+	font-size: 20px;
+	background-color: green;
+	border: 0;
+	border-radius: 100px;
+	margin: 18px;
+	outline: none;
+}
+
 .notRec{
 	background-color: darkred;
 }
@@ -17,6 +28,14 @@
 	animation-name: pulse;
 	animation-duration: 1.5s;
 	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+.saved{
+    background-color: green;
+    animation-name: pulse;
+	animation-duration: 1.5s;
+	animation-iteration-count: 1;
 	animation-timing-function: linear;
 }
 

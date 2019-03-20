@@ -287,11 +287,12 @@ class CodeContainer extends React.Component {
           }}
         />
 
+       
+        <Button toggleListen={this.toggleListen} />
         <SaveButton
           snippet={this.state.content}
           username={this.props.username}
         />
-        <Button toggleListen={this.toggleListen} />
       </div>
     )
   }
