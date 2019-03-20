@@ -7,6 +7,14 @@ class API {
     }).then(resp => resp.json())
   }
 
+  static signup (user) {
+      return fetch('http://localhost:3000/users', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(user)
+      }).then(resp => resp.json())
+  }
+
   static validate () {
     return this.get('http://localhost:3000/validate')
   }

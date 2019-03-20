@@ -6,8 +6,7 @@ import FuzzySet from 'fuzzyset.js'
 import Soundex from 'soundex-phonetics'
 import 'brace/mode/javascript'
 import 'brace/theme/solarized_dark'
-import SaveButton from './SaveButton';
-
+import SaveButton from './SaveButton'
 const SpeechRecognition = window.webkitSpeechRecognition
 const recognition = new SpeechRecognition()
 
@@ -287,7 +286,11 @@ class CodeContainer extends React.Component {
             tabSize: 2
           }}
         />
-        <SaveButton snippet={this.state.content}/>
+
+        <SaveButton
+          snippet={this.state.content}
+          username={this.props.username}
+        />
         <Button toggleListen={this.toggleListen} />
       </div>
     )

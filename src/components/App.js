@@ -20,6 +20,8 @@ class App extends React.Component {
     this.setState({ username: user.username })
   }
 
+  
+
   signOut = () => {
     localStorage.removeItem('token')
     this.setState({ username: '' })
@@ -42,11 +44,11 @@ class App extends React.Component {
         style={{
           backgroundColor: 'black',
           backgroundSize: 'cover',
-          height: '1000px',
+          height: '2000px',
           width: '100%'
         }}
       >
-        <Navbar signOut={this.signOut}/>
+        <Navbar signOut={this.signOut} username={this.state.username}/>
         <Switch>
           <Route
             exact
@@ -62,7 +64,7 @@ class App extends React.Component {
               <Snippets username={this.state.username} {...routerProps} />
             )}
           />
-          <Route  path='/record' component={() => <CodeContainer />} />
+          <Route  path='/record' component={() => <CodeContainer username={this.state.username}/>} />
         </Switch>
       </div>
     )

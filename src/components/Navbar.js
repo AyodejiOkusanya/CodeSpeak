@@ -5,15 +5,14 @@ class Navbar extends React.Component {
   state = { activeItem: 'home' }
 
   handleItemClick = (e, { name }) => {
-      this.setState({ activeItem: name })
+    this.setState({ activeItem: name })
   }
 
-  handleClick = (e, {name}) => {
+  handleClick = (e, { name }) => {
     this.setState({ activeItem: name })
     console.log('logging out')
     this.props.signOut()
   }
-
 
   render () {
     const { activeItem } = this.state
@@ -40,16 +39,27 @@ class Navbar extends React.Component {
             active={activeItem === 'share'}
             onClick={this.handleItemClick}
           />
-
-          <Menu.Menu position='right'>
-            <Link to='/'>
-              <Menu.Item
-                name='logout'
-                active={activeItem === 'logout'}
-                onClick={this.handleClick}
-              />
-            </Link>
-          </Menu.Menu>
+          {this.props.username ? (
+            <Menu.Menu position='right'>
+              <Link to='/'>
+                <Menu.Item
+                  name='logout'
+                  active={activeItem === 'logout'}
+                  onClick={this.handleClick}
+                />
+              </Link>
+            </Menu.Menu>
+          ) : (
+            <Menu.Menu position='right'>
+              <Link to='/'>
+                <Menu.Item
+                  name='login'
+                  active={activeItem === 'login'}
+                  onClick={this.handleClick}
+                />
+              </Link>
+            </Menu.Menu>
+          ) }
         </Menu>
       </div>
     )

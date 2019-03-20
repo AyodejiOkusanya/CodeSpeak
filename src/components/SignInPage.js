@@ -1,36 +1,47 @@
 import React from 'react'
-import { Button, Form, Segment, Divider, Checkbox } from 'semantic-ui-react'
-import API from './API';
+import { Button, Form, Segment, Divider, Checkbox, Popup } from 'semantic-ui-react'
+import API from './API'
 
 class SignInPage extends React.Component {
+  state = {
+    username: '',
+    password: ''
+  }
 
-    state = {
-        username: '',
-        password: ''
-    }
+  handleSubmit = event => {
+    // event.preventDefault();
+    const { signIn, history } = this.props
+    const user = this.state
+    API.signin(user).then(data => {
+      if (data.error) {
+        alert('something is wrong')
+      } else {
+        // console.log('here')
+        signIn(data)
+        history.push('/snippets')
+      }
+    })
+  }
 
-    handleSubmit = (event) => {
-        // event.preventDefault(); 
-        const {signIn, history} = this.props
-        const user = this.state 
-        API.signin(user).then(data => {
-            if (data.error) {
-                alert('something is wrong')
-            } else {
-                // console.log('here')
-                signIn(data)
-                history.push('/snippets')
-            }
-        })
-    }
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+  }
 
-    handleChange = (event) => {
-    
-        this.setState({
-            [event.target.name] : event.target.value 
-        })
-    }
-
+  handleSignUp = () => {
+    const { signIn, history } = this.props
+    const user = this.state
+    API.signup(user).then(data => {
+      if (data.error) {
+        alert('something is wrong')
+      } else {
+        // console.log('here')
+        signIn(data)
+        history.push('/record')
+      }
+    })
+  }
 
   render () {
     return (
@@ -50,19 +61,34 @@ class SignInPage extends React.Component {
               justifyContent: 'center',
               alignItems: 'center'
             }}
-            onSubmit = {this.handleSubmit}
+            onSubmit={this.handleSubmit}
           >
             <Form.Field style={{ padding: '10px' }}>
               <label>Username</label>
-              <input onChange={this.handleChange} value={this.state.username} name = 'username' placeholder='Username' />
+              <input
+                onChange={this.handleChange}
+                value={this.state.username}
+                name='username'
+                placeholder='Username'
+              />
             </Form.Field>
             <Form.Field style={{ padding: '10px' }}>
               <label>Password</label>
-              <input onChange={this.handleChange} value={this.state.password} name = 'password' placeholder='Password' />
+              <input
+                onChange={this.handleChange}
+                value={this.state.password}
+                name='password'
+                placeholder='Password'
+              />
             </Form.Field>
 
-            <Button type='submit'>Submit</Button>
+            <Button type='submit'>Login</Button>
+            <Popup trigger={<Button type='button' onClick={this.handleSignUp}>
+            Sign Up
+          </Button>} content='Sign up to get access to extra features like saving snippets!' />
+            
           </Form>
+         
         </div>
       </div>
     )
