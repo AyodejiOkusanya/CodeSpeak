@@ -4,7 +4,7 @@ import brace from 'brace'
 import AceEditor from 'react-ace'
 import FuzzySet from 'fuzzyset.js'
 import Soundex from 'soundex-phonetics'
-import 'brace/mode/javascript'
+import 'brace/mode/html'
 import 'brace/theme/solarized_dark'
 import SaveButton from './SaveButton'
 import { Container } from 'semantic-ui-react'
@@ -18,16 +18,9 @@ recognition.lang = 'en-US'
 class HTML extends React.Component {
   state = {
     listening: false,
-    content: `function onload(editor) {
-    console.log("Welcome to CodeSpeak")
-  }`,
-    keywords: []
-  }
-
-  componentDidMount() {
-    if (this.props.editContent) {
-      this.setState({content: this.props.editContent})
-    }
+    content: ``,
+    jsxArray: [],
+    backgroundColor: 'white'
   }
 
   onChange = event => {
@@ -61,21 +54,13 @@ class HTML extends React.Component {
           finalTranscript += transcript + ' '
         }
       }
-      let fTArray = finalTranscript.split(' ').map(word => {
-        // console.log(this.fuzzyMatchBox.get(word)[1] )
-        return this.fuzzyMatchBox.get(word)
-          ? this.fuzzyMatchBox.get(word)[0][1]
-          : word
-      })
 
-      let completeTranscript = fTArray.join(' ')
       // if (Soundex('for loop')=== Soundex('phone')) {
       //   console.log('yes')
       // } else {
       //   console.log('no')
       // }
       console.log(finalTranscript)
-      console.log(completeTranscript)
       // this.addContentToState(completeTranscript)
       this.addContentToState(finalTranscript)
     }
@@ -93,199 +78,145 @@ class HTML extends React.Component {
     this.setState({ textArray: [...this.state.textArray, this.state.codeText] })
   }
 
-  forLoop = () => {
-    return ` \n for (let i = 0; i < n; i++) {   } \n`
-  }
-
-  classFn = title => {
-    let classTitle = title || `Enter name here`
-    let classTitleArray = classTitle.split('')
-    classTitleArray[0] = classTitleArray[0].toUpperCase()
-    classTitle = classTitleArray.join('')
-    return ` \n class ${classTitle} {   } \n`
-  }
-
-  arrowFn = name => {
-    let arrowTitle = name ? `${name} = ` : ''
-
-    return ` \n ${arrowTitle}() => {   } \n `
-  }
-
-  normalFn = name => {
+  h1Tag = name => {
     let normalTitle = name ? `${name}` : ''
 
-    return `\n function ${normalTitle} () {   } \n`
+    this.setState({
+      jsxArray: [
+        ...this.state.jsxArray,
+        () => {
+          return <h1>{normalTitle}</h1>
+        }
+      ]
+    })
+
+    return `\n <h1>  ${normalTitle}  </h1> \n`
   }
 
-  fuzzyMatchBox = FuzzySet(['for', 'loop', 'class', 'function', 'clear'])
+  h2Tag = name => {
+    let normalTitle = name ? `${name}` : ''
 
-  injectNewCode = (text, keyWord, textArray) => {
-    let lowerKeyWord = keyWord
-    if (
-      this.state.keywords.find(word => {
-        keyWord = word
-        lowerKeyWord = word.toLowerCase()
-        return text.includes(lowerKeyWord)
-      })
-    ) {
-      console.log('i ran')
-      console.log('inside', `keyword is ${keyWord}`)
-      let keyWordIndex = textArray.indexOf(lowerKeyWord)
-      let parsedTranscript = textArray.slice(0, keyWordIndex).join(' ')
+    this.setState({
+      jsxArray: [
+        ...this.state.jsxArray,
+        () => {
+          return <h2>{normalTitle}</h2>
+        }
+      ]
+    })
 
-      let injectHere = this.state.content.split(' ').indexOf(keyWord)
+    return `\n <h2>  ${normalTitle}  </h2> \n`
+  }
 
-      console.log(`injectHere: ${injectHere}`)
-      console.log(`contentArray:${this.state.content.split(' ')}`)
+  h3Tag = name => {
+    let normalTitle = name ? `${name}` : ''
 
-      if (this.state.content.split(' ')[injectHere - 1] === 'class') {
-        return this.setState({
-          content: [
-            ...this.state.content.split(' ').slice(0, injectHere + 2),
-            this.returnCodeSnippetWithoutChangingState(parsedTranscript),
-            this.state.content.split(' ').slice(injectHere + 2)
-          ]
-            .join(' ')
-            .split(',')
-            .join(' ')
-        })
-      } else if (this.state.content.split(' ')[injectHere + 1] === '=') {
-        return this.setState({
-          content: [
-            ...this.state.content.split(' ').slice(0, injectHere + 7),
-            this.returnCodeSnippetWithoutChangingState(parsedTranscript),
-            this.state.content.split(' ').slice(injectHere + 7)
-          ]
-            .join(' ')
-            .split(',')
-            .join(' ')
-        })
-      } else if (this.state.content.split(' ')[injectHere - 1] === 'function') {
-        return this.setState({
-          content: [
-            ...this.state.content.split(' ').slice(0, injectHere + 4),
-            this.returnCodeSnippetWithoutChangingState(parsedTranscript),
-            this.state.content.split(' ').slice(injectHere + 4)
-          ]
-            .join(' ')
-            .split(',')
-            .join(' ')
-        })
-      }
-    }
+    this.setState({
+      jsxArray: [
+        ...this.state.jsxArray,
+        () => {
+          return <h3>{normalTitle}</h3>
+        }
+      ]
+    })
 
-    return 'end'
+    return `\n <h3>  ${normalTitle}  </h3> \n`
+  }
+
+  h4Tag = name => {
+    let normalTitle = name ? `${name}` : ''
+
+    this.setState({
+      jsxArray: [
+        ...this.state.jsxArray,
+        () => {
+          return <h4>{normalTitle}</h4>
+        }
+      ]
+    })
+
+    return `\n <h4>  ${normalTitle}  </h4> \n`
+  }
+
+  pTag = name => {
+    let normalTitle = name ? `${name}` : ''
+
+    this.setState({
+      jsxArray: [
+        ...this.state.jsxArray,
+        () => {
+          return <p>{normalTitle}</p>
+        }
+      ]
+    })
+
+    return `\n <p>  ${normalTitle}  </p> \n`
   }
 
   addContentToState = newFinalTranscript => {
-    let text = newFinalTranscript.toLowerCase()
+    let text = newFinalTranscript
     let textArray = text.split(' ')
-    let keyWord = null
 
-    console.log(`the keyword is ${keyWord}`)
     console.log(`the text is this: ${text}`)
 
-    if (this.injectNewCode(text, keyWord, textArray) !== 'end') {
-      return
-    }
+    if (text.includes('H1')) {
+      console.log('in the html')
+      let tagContent = textArray.slice(textArray.indexOf('H1') + 2).join(' ')
 
-    if (text.includes('for') || text.includes('loop')) {
       return this.setState({
-        content: this.state.content + '\n' + this.forLoop()
+        content: this.state.content + '\n' + this.h1Tag(tagContent)
       })
-    } else if (text.includes('class') || text.includes('cross')) {
-      let classTitle = textArray[textArray.indexOf('class') + 1]
-      if (classTitle !== '') {
-        this.fuzzyMatchBox.add(classTitle)
-        let classTitleArray = classTitle.split('')
-        classTitleArray[0] = classTitleArray[0].toUpperCase()
-        classTitle = classTitleArray.join('')
+    } else if (text.includes('H2')) {
+      console.log('in the html')
+      let tagContent = textArray.slice(textArray.indexOf('H2') + 2).join(' ')
 
-        this.setState({ keywords: [...this.state.keywords, classTitle] })
+      return this.setState({
+        content: this.state.content + '\n' + this.h2Tag(tagContent)
+      })
+    } else if (text.includes('H3')) {
+      console.log('in the html')
+      let tagContent = textArray.slice(textArray.indexOf('H3') + 2).join(' ')
+
+      return this.setState({
+        content: this.state.content + '\n' + this.h3Tag(tagContent)
+      })
+    } else if (text.includes('H4')) {
+      console.log('in the html')
+      let tagContent = textArray.slice(textArray.indexOf('H4') + 2).join(' ')
+
+      return this.setState({
+        content: this.state.content + '\n' + this.h4Tag(tagContent)
+      })
+    } else if (text.includes('p') || text.includes('tag')) {
+      console.log('in the html')
+      let tagContent = textArray.slice(textArray.indexOf('p') + 2).join(' ')
+
+      return this.setState({
+        content: this.state.content + '\n' + this.pTag(tagContent)
+      })
+    } else if(text.includes('colour')) {
+        let colour = textArray[textArray.indexOf('colour') + 1]
+        this.setState({backgroundColor:colour})
+    }else if (text.includes('clear')) {
+        this.setState({ content: '', jsxArray:[] })
       }
-
-      return this.setState({
-        content: this.state.content + '\n' + this.classFn(classTitle)
-      })
-    } else if (text.includes('arrow') && text.includes('function')) {
-      let functionName = textArray[textArray.indexOf('function') + 1]
-      if (functionName !== '') {
-        this.fuzzyMatchBox.add(functionName)
-        this.setState({ keywords: [...this.state.keywords, functionName] })
-      }
-
-      return this.setState({
-        content: this.state.content + '\n' + this.arrowFn(functionName)
-      })
-    } else if (text.includes('clear')) {
-      this.setState({ content: '', keywords: [] })
-    } else if (text.includes('function')) {
-      let functionName = textArray[textArray.indexOf('function') + 1]
-
-      if (functionName !== '') {
-        this.setState({ keywords: [...this.state.keywords, functionName] })
-      }
-
-      return this.setState({
-        content: this.state.content + '\n' + this.normalFn(functionName)
-      })
-    }
   }
 
-  returnCodeSnippetWithoutChangingState = newFinalTranscript => {
-    console.log(newFinalTranscript)
+  //   onChange = () => {
 
-    let text = newFinalTranscript.toLowerCase()
-    let textArray = text.split(' ')
-    let keyWord = null
+  // let someHtml = '<h1>hello</h1>'
+  // let execute = () => {
+  // return <div className="Container" dangerouslySetInnerHTML={{__html:
+  //   someHtml}}></div>
+  // }
 
-    if (this.injectNewCode(text, keyWord, textArray) !== 'end') {
-      return
-    }
+  // console.log(execute(),(<h2>hello</h2>) )
+  //   }
 
-    if (text.includes('for') || text.includes('loop')) {
-      return this.forLoop()
-    } else if (text.includes('class') || text.includes('cross')) {
-      let classTitle = textArray[textArray.indexOf('class') + 1]
-      if (classTitle !== '') {
-        let classTitleArray = classTitle.split('')
-        classTitleArray[0] = classTitleArray[0].toUpperCase()
-        classTitle = classTitleArray.join('')
-
-        this.setState({ keywords: [...this.state.keywords, classTitle] })
-      }
-
-      return this.classFn(classTitle)
-    } else if (text.includes('arrow') && text.includes('function')) {
-      let functionName = textArray[textArray.indexOf('function') + 1]
-      this.setState({ keywords: [...this.state.keywords, functionName] })
-
-      return this.arrowFn(functionName)
-    } else if (text.includes('clear')) {
-      return this.setState({ content: '' })
-    } else if (text.includes('function')) {
-      let functionName = textArray[textArray.indexOf('function') + 1]
-      this.setState({ keywords: [...this.state.keywords, functionName] })
-      return this.normalFn(functionName)
-    }
-  }
-
-  onChange = () => {
-
-    // let someHtml = '<h1>hello</h1>'
-    // let execute = () => {
-    // return <div className="Container" dangerouslySetInnerHTML={{__html: 
-    //   someHtml}}></div>
-    // }
-
-
-
-
-
-
-
-
-    // console.log(execute(),(<h2>hello</h2>) )
+  renderHTML = () => {
+    return this.state.jsxArray.map(fn => {
+      return fn()
+    })
   }
 
   render () {
@@ -293,7 +224,7 @@ class HTML extends React.Component {
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <AceEditor
           placeholder='Placeholder Text'
-          mode='javascript'
+          mode='html'
           theme='solarized_dark'
           name='blah2'
           onLoad={this.onLoad}
@@ -312,14 +243,15 @@ class HTML extends React.Component {
           }}
         />
 
-       
         <Button toggleListen={this.toggleListen} />
         <SaveButton
           snippet={this.state.content}
           username={this.props.username}
           editID={this.props.editID}
         />
-        <Container style={{backgroundColor:'white'}}className="inverted">Hello</Container>
+        <Container style={{ backgroundColor: `${this.state.backgroundColor}` }} className='inverted'>
+          {this.renderHTML()}
+        </Container>
       </div>
     )
   }
