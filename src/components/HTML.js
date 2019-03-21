@@ -86,7 +86,7 @@ class HTML extends React.Component {
       jsxArray: [
         ...this.state.jsxArray,
         () => {
-          return <h1 className={className}>{normalTitle}</h1>
+          return <h1 className={className} style={{  }}>{normalTitle}</h1>
         }
       ]
     })
@@ -159,6 +159,16 @@ class HTML extends React.Component {
     let textArray = text.split(' ')
     let theClassName = null 
     console.log(`the text is this: ${text}`)
+
+    let keyWord = null 
+    if (
+      this.state.keywords.find(word => {
+        keyWord = word
+        return text.includes(word)
+      })
+    ) {
+        
+    }
 
     if (text.includes('class')) {
         theClassName = textArray[textArray.indexOf('class') + 1]
