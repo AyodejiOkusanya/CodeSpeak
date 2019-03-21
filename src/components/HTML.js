@@ -21,7 +21,10 @@ class HTML extends React.Component {
     content: ``,
     jsxArray: [],
     backgroundColor: 'white',
-    keywords: []
+    keywords: [], 
+    structure: null, 
+    textColor: null, 
+    justifyContent: null 
   }
 
   onChange = event => {
@@ -156,19 +159,19 @@ class HTML extends React.Component {
 
   addContentToState = newFinalTranscript => {
     let text = newFinalTranscript
-    let textArray = text.split(' ')
+    let textArray = text.replace(/-/g, ' ').split(' ')
     let theClassName = null 
     console.log(`the text is this: ${text}`)
 
-    let keyWord = null 
-    if (
-      this.state.keywords.find(word => {
-        keyWord = word
-        return text.includes(word)
-      })
-    ) {
+    // let keyWord = null 
+    // if (
+    //   this.state.keywords.find(word => {
+    //     keyWord = word
+    //     return text.includes(word)
+    //   })
+    // ) {
         
-    }
+    // }
 
     if (text.includes('class')) {
         theClassName = textArray[textArray.indexOf('class') + 1]
@@ -208,6 +211,9 @@ class HTML extends React.Component {
       return this.setState({
         content: this.state.content + '\n' + this.h4Tag(tagContent, theClassName)
       })
+    } else if(text.includes('display')) {
+        let display = textArray[textArray.indexOf('display') + 1]
+        this.setState({structure:display})
     } else if (text.includes('p') || text.includes('tag')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('p') + 2).join(' ')
@@ -215,11 +221,18 @@ class HTML extends React.Component {
       return this.setState({
         content: this.state.content + '\n' + this.pTag(tagContent, theClassName)
       })
+    }else if(text.includes('colour') && text.includes('text')) {
+        let colour = textArray[textArray.indexOf('colour') + 1]
+        this.setState({textColor:colour})
     } else if(text.includes('colour')) {
         let colour = textArray[textArray.indexOf('colour') + 1]
         this.setState({backgroundColor:colour})
-    }else if (text.includes('clear')) {
+    } else if (text.includes('clear')) {
         this.setState({ content: '', jsxArray:[] })
+      } else if (text.includes('justify') && text.includes('content')) {
+        let position = textArray[textArray.indexOf('content') + 1]
+        console.log('we made it')
+        this.setState({ justifyContent: position })
       }
   }
 
@@ -270,7 +283,7 @@ class HTML extends React.Component {
           username={this.props.username}
           editID={this.props.editID}
         />
-        <Container style={{ backgroundColor: `${this.state.backgroundColor}` }} className='inverted'>
+        <Container style={{justifyContent: `${this.state.justifyContent}`,color:`${this.state.textColor}`, display: `${this.state.structure}` ,backgroundColor: `${this.state.backgroundColor}` }} className='inverted'>
           {this.renderHTML()}
         </Container>
       </div>
