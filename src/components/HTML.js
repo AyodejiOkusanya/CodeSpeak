@@ -7,6 +7,7 @@ import Soundex from 'soundex-phonetics'
 import 'brace/mode/javascript'
 import 'brace/theme/solarized_dark'
 import SaveButton from './SaveButton'
+import { Container } from 'semantic-ui-react'
 const SpeechRecognition = window.webkitSpeechRecognition
 const recognition = new SpeechRecognition()
 
@@ -14,7 +15,7 @@ recognition.continous = true
 recognition.interimResults = false
 recognition.lang = 'en-US'
 
-class CodeContainer extends React.Component {
+class HTML extends React.Component {
   state = {
     listening: false,
     content: `function onload(editor) {
@@ -318,9 +319,10 @@ class CodeContainer extends React.Component {
           username={this.props.username}
           editID={this.props.editID}
         />
+        <Container style={{backgroundColor:'white'}}className="inverted">Hello</Container>
       </div>
     )
   }
 }
 
-export default CodeContainer
+export default HTML

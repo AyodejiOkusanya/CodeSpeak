@@ -12,15 +12,16 @@ class Snippets extends React.Component {
     return API.getSnippets().then(snippets => this.setState({ snippets }))
   }
 
-  handleDelete = (event) => {
+  handleDelete = event => {
     console.log(event.target.id)
     API.deleteSnippet(event.target.id)
 
-
-    let newSnippets = this.state.snippets.slice().filter((snip) => {
-      console.log(`the id is : ${event.target.id}, and the snip id is ${snip.id}`)
-        return snip.id.toString() !== event.target.id.toString() 
-    }) 
+    let newSnippets = this.state.snippets.slice().filter(snip => {
+      console.log(
+        `the id is : ${event.target.id}, and the snip id is ${snip.id}`
+      )
+      return snip.id.toString() !== event.target.id.toString()
+    })
 
     console.log(newSnippets)
 
@@ -28,6 +29,12 @@ class Snippets extends React.Component {
       snippets: newSnippets
     })
   }
+
+  handleEdit = (event,codesnip, id) => {
+    this.props.handleEditContent(codesnip, id)
+    this.props.history.push('/record')
+  }
+
 
   renderCodeSnippets = () => {
     return this.state.snippets.map(content => {
@@ -55,8 +62,19 @@ class Snippets extends React.Component {
                 tabSize: 2
               }}
             />
-            <button style={{ marginTop: '10px' }}>Edit</button>
-            <button id={content.id} style={{ marginTop: '10px' }} onClick={this.handleDelete}>Delete</button>
+            <button
+              style={{ marginTop: '10px' }}
+              onClick={(event, codesnip, id) => this.handleEdit(event, content.codesnippet, content.id)}
+            >
+              Edit
+            </button>
+            <button
+              id={content.id}
+              style={{ marginTop: '10px' }}
+              onClick={this.handleDelete}
+            >
+              Delete
+            </button>
           </Grid.Column>
         </div>
         // </div>

@@ -40,6 +40,14 @@ class API {
     })
   }
 
+  static editSnippet(id, newSnippet) {
+    return fetch(`http://localhost:3000/snippets/${id}/edit`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({codesnippet:newSnippet})
+    })
+  }
+
   static get (url) {
     return fetch(url, {
       headers: {
