@@ -20,7 +20,8 @@ class HTML extends React.Component {
     listening: false,
     content: ``,
     jsxArray: [],
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    keywords: []
   }
 
   onChange = event => {
@@ -78,121 +79,131 @@ class HTML extends React.Component {
     this.setState({ textArray: [...this.state.textArray, this.state.codeText] })
   }
 
-  h1Tag = name => {
+  h1Tag = (name,className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
       jsxArray: [
         ...this.state.jsxArray,
         () => {
-          return <h1>{normalTitle}</h1>
+          return <h1 className={className}>{normalTitle}</h1>
         }
       ]
     })
 
-    return `\n <h1>  ${normalTitle}  </h1> \n`
+    return `\n <h1 class="${className}">  ${normalTitle}  </h1> \n`
   }
 
-  h2Tag = name => {
+  h2Tag = (name,className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
       jsxArray: [
         ...this.state.jsxArray,
         () => {
-          return <h2>{normalTitle}</h2>
+          return <h2 className={className}>{normalTitle}</h2>
         }
       ]
     })
 
-    return `\n <h2>  ${normalTitle}  </h2> \n`
+    return `\n <h2 class="${className}">  ${normalTitle}  </h2> \n`
   }
 
-  h3Tag = name => {
+  h3Tag = (name,className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
       jsxArray: [
         ...this.state.jsxArray,
         () => {
-          return <h3>{normalTitle}</h3>
+          return <h3 className={className}>{normalTitle}</h3>
         }
       ]
     })
 
-    return `\n <h3>  ${normalTitle}  </h3> \n`
+    return `\n <h3 class="${className}">  ${normalTitle}  </h3> \n`
   }
 
-  h4Tag = name => {
+  h4Tag = (name,className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
       jsxArray: [
         ...this.state.jsxArray,
         () => {
-          return <h4>{normalTitle}</h4>
+          return <h4 className={className}>{normalTitle}</h4>
         }
       ]
     })
 
-    return `\n <h4>  ${normalTitle}  </h4> \n`
+    return `\n <h4 class="${className}">  ${normalTitle}  </h4> \n`
   }
 
-  pTag = name => {
+  pTag = (name,className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
       jsxArray: [
         ...this.state.jsxArray,
         () => {
-          return <p>{normalTitle}</p>
+          return <p className={className}>{normalTitle}</p>
         }
       ]
     })
 
-    return `\n <p>  ${normalTitle}  </p> \n`
+    return `\n <p class="${className}">  ${normalTitle}  </p> \n`
   }
 
   addContentToState = newFinalTranscript => {
     let text = newFinalTranscript
     let textArray = text.split(' ')
-
+    let theClassName = null 
     console.log(`the text is this: ${text}`)
+
+    if (text.includes('class')) {
+        theClassName = textArray[textArray.indexOf('class') + 1]
+        this.setState({keywords: [...this.state.keywords, theClassName ]})
+        console.table(textArray)
+        textArray = textArray.filter((word) => {
+            return word !== 'class' && word !== textArray[textArray.indexOf('class') + 1]
+        })
+        console.table(textArray)
+    }
 
     if (text.includes('H1')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H1') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.h1Tag(tagContent)
+        content: this.state.content + '\n' + this.h1Tag(tagContent, theClassName)
       })
     } else if (text.includes('H2')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H2') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.h2Tag(tagContent)
+        content: this.state.content + '\n' + this.h2Tag(tagContent, theClassName)
       })
     } else if (text.includes('H3')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H3') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.h3Tag(tagContent)
+        content: this.state.content + '\n' + this.h3Tag(tagContent, theClassName)
       })
     } else if (text.includes('H4')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H4') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.h4Tag(tagContent)
+        content: this.state.content + '\n' + this.h4Tag(tagContent, theClassName)
       })
     } else if (text.includes('p') || text.includes('tag')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('p') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.pTag(tagContent)
+        content: this.state.content + '\n' + this.pTag(tagContent, theClassName)
       })
     } else if(text.includes('colour')) {
         let colour = textArray[textArray.indexOf('colour') + 1]
