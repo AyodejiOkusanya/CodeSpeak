@@ -116,6 +116,11 @@ class CodeContainer extends React.Component {
     return `\n function ${normalTitle} () {   } \n`
   }
 
+  innerClassFn = (name) => {
+    let title = name ? `${name}` : ''
+    return ` \n ${title}() {   } \n `
+  }
+
   fuzzyMatchBox = FuzzySet(['for', 'loop', 'class', 'function', 'clear'])
 
   injectNewCode = (text, keyWord, textArray) => {
@@ -141,7 +146,7 @@ class CodeContainer extends React.Component {
         return this.setState({
           content: [
             ...this.state.content.split(' ').slice(0, injectHere + 2),
-            this.returnCodeSnippetWithoutChangingState(parsedTranscript),
+            this.returnCodeSnippetWithoutChangingState(parsedTranscript, 'here'),
             this.state.content.split(' ').slice(injectHere + 2)
           ]
             .join(' ')
@@ -231,7 +236,7 @@ class CodeContainer extends React.Component {
     }
   }
 
-  returnCodeSnippetWithoutChangingState = newFinalTranscript => {
+  returnCodeSnippetWithoutChangingState = (newFinalTranscript, classDets = null) => {
     console.log(newFinalTranscript)
 
     let text = newFinalTranscript.toLowerCase()
@@ -240,6 +245,12 @@ class CodeContainer extends React.Component {
 
     if (this.injectNewCode(text, keyWord, textArray) !== 'end') {
       return
+    }
+
+    if (text.includes('function') && classDets) {
+      let functionName = textArray[textArray.indexOf('function') + 1]
+      this.setState({ keywords: [...this.state.keywords, functionName] })
+      return this.innerClassFn(functionName)
     }
 
     if (text.includes('for') || text.includes('loop')) {
@@ -266,7 +277,7 @@ class CodeContainer extends React.Component {
       let functionName = textArray[textArray.indexOf('function') + 1]
       this.setState({ keywords: [...this.state.keywords, functionName] })
       return this.normalFn(functionName)
-    }
+    } 
   }
 
   onChange = (event) => {
