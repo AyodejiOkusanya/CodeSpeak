@@ -21,10 +21,12 @@ class HTML extends React.Component {
     content: ``,
     jsxArray: [],
     backgroundColor: 'white',
-    keywords: [], 
-    structure: null, 
-    textColor: null, 
-    justifyContent: null 
+    keywords: [],
+    structure: null,
+    textColor: null,
+    justifyContent: null,
+    flexDirection: null,
+    flexWrap: null
   }
 
   onChange = event => {
@@ -82,14 +84,18 @@ class HTML extends React.Component {
     this.setState({ textArray: [...this.state.textArray, this.state.codeText] })
   }
 
-  h1Tag = (name,className) => {
+  h1Tag = (name, className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
       jsxArray: [
         ...this.state.jsxArray,
         () => {
-          return <h1 className={className} style={{  }}>{normalTitle}</h1>
+          return (
+            <h1 className={className} style={{}}>
+              {normalTitle}
+            </h1>
+          )
         }
       ]
     })
@@ -97,7 +103,7 @@ class HTML extends React.Component {
     return `\n <h1 class="${className}">  ${normalTitle}  </h1> \n`
   }
 
-  h2Tag = (name,className) => {
+  h2Tag = (name, className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
@@ -112,7 +118,7 @@ class HTML extends React.Component {
     return `\n <h2 class="${className}">  ${normalTitle}  </h2> \n`
   }
 
-  h3Tag = (name,className) => {
+  h3Tag = (name, className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
@@ -127,7 +133,7 @@ class HTML extends React.Component {
     return `\n <h3 class="${className}">  ${normalTitle}  </h3> \n`
   }
 
-  h4Tag = (name,className) => {
+  h4Tag = (name, className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
@@ -142,7 +148,7 @@ class HTML extends React.Component {
     return `\n <h4 class="${className}">  ${normalTitle}  </h4> \n`
   }
 
-  pTag = (name,className) => {
+  pTag = (name, className) => {
     let normalTitle = name ? `${name}` : ''
 
     this.setState({
@@ -157,30 +163,71 @@ class HTML extends React.Component {
     return `\n <p class="${className}">  ${normalTitle}  </p> \n`
   }
 
+  boxShape = (num, color) => {
+    let result = ''
+    for (let i = 0; i < num; i++) {
+        this.setState({
+            jsxArray: [
+              ...this.state.jsxArray,
+              () => {
+                return (
+                  <div
+                    style={{
+                      margin: '10px',
+                      width: '100px',
+                      height: '100px',
+                      backgroundColor: `${color}`
+                    }}
+                  />
+                )
+              }
+            ]
+          })
+          
+          result += `<div
+      style={{
+        margin: '10px',
+        width: '100px',
+        height: '100px',
+        backgroundColor: ${color}
+      }}
+    />`
+
+
+    }
+    // console.log(num)
+    return result 
+
+    
+    
+  }
+
   addContentToState = newFinalTranscript => {
     let text = newFinalTranscript
     let textArray = text.replace(/-/g, ' ').split(' ')
-    let theClassName = null 
+    let theClassName = null
     console.log(`the text is this: ${text}`)
 
-    // let keyWord = null 
+    // let keyWord = null
     // if (
     //   this.state.keywords.find(word => {
     //     keyWord = word
     //     return text.includes(word)
     //   })
     // ) {
-        
+
     // }
 
     if (text.includes('class')) {
-        theClassName = textArray[textArray.indexOf('class') + 1]
-        this.setState({keywords: [...this.state.keywords, theClassName ]})
-        console.table(textArray)
-        textArray = textArray.filter((word) => {
-            return word !== 'class' && word !== textArray[textArray.indexOf('class') + 1]
-        })
-        console.table(textArray)
+      theClassName = textArray[textArray.indexOf('class') + 1]
+      this.setState({ keywords: [...this.state.keywords, theClassName] })
+      console.table(textArray)
+      textArray = textArray.filter(word => {
+        return (
+          word !== 'class' && word !== textArray[textArray.indexOf('class') + 1]
+        )
+      })
+      console.table(textArray)
     }
 
     if (text.includes('H1')) {
@@ -188,52 +235,93 @@ class HTML extends React.Component {
       let tagContent = textArray.slice(textArray.indexOf('H1') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.h1Tag(tagContent, theClassName)
+        content:
+          this.state.content + '\n' + this.h1Tag(tagContent, theClassName)
       })
     } else if (text.includes('H2')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H2') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.h2Tag(tagContent, theClassName)
+        content:
+          this.state.content + '\n' + this.h2Tag(tagContent, theClassName)
       })
     } else if (text.includes('H3')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H3') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.h3Tag(tagContent, theClassName)
+        content:
+          this.state.content + '\n' + this.h3Tag(tagContent, theClassName)
       })
     } else if (text.includes('H4')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H4') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.h4Tag(tagContent, theClassName)
+        content:
+          this.state.content + '\n' + this.h4Tag(tagContent, theClassName)
       })
-    } else if(text.includes('display')) {
-        let display = textArray[textArray.indexOf('display') + 1]
-        this.setState({structure:display})
+    } else if (text.includes('display')) {
+      let display = textArray[textArray.indexOf('display') + 1]
+      this.setState({ structure: display })
+    } else if (text.includes('flex-wrap')) {
+      // console.log(textArray)
+      let wrap = textArray
+        .slice(textArray.indexOf('wrap') + 1)
+        .join(' ')
+        .replace(' ', '-')
+      console.log(wrap)
+      this.setState({ flexWrap: wrap })
+    } else if (text.includes('flex-direction')) {
+      // console.log(textArray)
+      let direction = textArray
+        .slice(textArray.indexOf('direction') + 1)
+        .join(' ')
+      console.log(direction)
+      this.setState({ flexDirection: direction })
     } else if (text.includes('p') || text.includes('tag')) {
       console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('p') + 2).join(' ')
 
       return this.setState({
-        content: this.state.content + '\n' + this.pTag(tagContent, theClassName)
+        content:
+          this.state.content + '\n' + this.pTag(tagContent, theClassName)
       })
-    }else if(text.includes('colour') && text.includes('text')) {
-        let colour = textArray[textArray.indexOf('colour') + 1]
-        this.setState({textColor:colour})
-    } else if(text.includes('colour')) {
-        let colour = textArray[textArray.indexOf('colour') + 1]
-        this.setState({backgroundColor:colour})
+    } else if (text.includes('colour') && text.includes('text')) {
+      let colour = textArray[textArray.indexOf('colour') + 1]
+      this.setState({ textColor: colour })
+    } else if (text.includes('colour')) {
+      let colour = textArray[textArray.indexOf('colour') + 1]
+      this.setState({ backgroundColor: colour })
     } else if (text.includes('clear')) {
-        this.setState({ content: '', jsxArray:[] })
-      } else if (text.includes('justify') && text.includes('content')) {
-        let position = textArray[textArray.indexOf('content') + 1]
-        console.log('we made it')
-        this.setState({ justifyContent: position })
-      }
+      this.setState({ content: '', jsxArray: [] })
+    } else if (text.includes('justify') && text.includes('content')) {
+      let position = textArray[textArray.indexOf('content') + 1]
+      console.log('we made it')
+      this.setState({ justifyContent: position })
+    } else if (text.includes('box') || text.includes('boxes')) {
+
+        if (text.includes('boxes')) {
+            let color =
+            textArray[( textArray.indexOf('boxes')) - 1]
+          let num =
+            textArray[( textArray.indexOf('boxes')) - 2]
+            console.log(num)
+          return this.setState({
+            content: this.state.content + '\n' + this.boxShape(num, color)
+          })
+        } else {
+            let color =
+            textArray[( textArray.indexOf('box')) - 1]
+          let num = 1
+            // console.log(num)
+          return this.setState({
+            content: this.state.content + '\n' + this.boxShape(num, color)
+          })
+        }
+     
+    }
   }
 
   //   onChange = () => {
@@ -283,7 +371,17 @@ class HTML extends React.Component {
           username={this.props.username}
           editID={this.props.editID}
         />
-        <Container style={{justifyContent: `${this.state.justifyContent}`,color:`${this.state.textColor}`, display: `${this.state.structure}` ,backgroundColor: `${this.state.backgroundColor}` }} className='inverted'>
+        <Container
+          style={{
+            flexWrap: `${this.state.flexWrap}`,
+            flexDirection: `${this.state.flexDirection}`,
+            justifyContent: `${this.state.justifyContent}`,
+            color: `${this.state.textColor}`,
+            display: `${this.state.structure}`,
+            backgroundColor: `${this.state.backgroundColor}`
+          }}
+          className='inverted'
+        >
           {this.renderHTML()}
         </Container>
       </div>
