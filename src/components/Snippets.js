@@ -32,6 +32,7 @@ class Snippets extends React.Component {
 
   handleEdit = (event,codesnip, id) => {
     this.props.handleEditContent(codesnip, id)
+    
     this.props.history.push('/record')
   }
 

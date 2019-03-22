@@ -269,8 +269,10 @@ class CodeContainer extends React.Component {
     }
   }
 
-  onChange = () => {
+  onChange = (event) => {
 
+    // console.log(event)
+    this.setState({content:event})
     // let someHtml = '<h1>hello</h1>'
     // let execute = () => {
     // return <div className="Container" dangerouslySetInnerHTML={{__html: 

@@ -5,7 +5,7 @@ import AceEditor from 'react-ace'
 import FuzzySet from 'fuzzyset.js'
 import Soundex from 'soundex-phonetics'
 import 'brace/mode/html'
-import 'brace/theme/solarized_dark'
+import 'brace/theme/terminal'
 import SaveButton from './SaveButton'
 import { Container } from 'semantic-ui-react'
 const SpeechRecognition = window.webkitSpeechRecognition
@@ -259,7 +259,7 @@ class HTML extends React.Component {
         <AceEditor
           placeholder='Placeholder Text'
           mode='html'
-          theme='solarized_dark'
+          theme='terminal'
           name='blah2'
           onLoad={this.onLoad}
           onChange={this.onChange}

@@ -18,6 +18,8 @@ class App extends React.Component {
   //   this.setState({ username, password })
   // }
 
+  
+
   signIn = user => {
     localStorage.setItem('token', user.token)
     this.setState({ username: user.username })
