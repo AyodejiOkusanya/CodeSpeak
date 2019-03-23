@@ -36,12 +36,13 @@ class HTML extends React.Component {
   handleListen = () => {
     console.log('listening?', this.state.listening)
     if (this.state.listening) {
-      recognition.start()
-      recognition.onend = () => {
-        console.log('...continue listening...')
         recognition.start()
-      }
-    } else {
+        recognition.onend = () => {
+          // console.log('...continue listening...')
+          // recognition.start()
+          this.setState({ listening: false })
+        }
+      } else {
       recognition.stop()
       recognition.onend = () => {
         console.log('Stopped listening per click')
@@ -165,6 +166,20 @@ class HTML extends React.Component {
 
   boxShape = (num, color) => {
     let result = ''
+    let nums = {
+        'one':1,
+        'two':2,
+        'three':3,
+        'four':4,
+        'five':5,
+        'six':6,
+        'seven':7,
+        'eight':8,
+        'nine':9,
+        'ten':10
+    }
+
+    num = nums[num] || num
     for (let i = 0; i < num; i++) {
         this.setState({
             jsxArray: [
@@ -365,7 +380,7 @@ class HTML extends React.Component {
           }}
         />
 
-        <Button toggleListen={this.toggleListen} />
+        <Button toggleListen={this.toggleListen} listening={this.state.listening}/>
         <SaveButton
           snippet={this.state.content}
           username={this.props.username}
