@@ -23,9 +23,9 @@ class CodeContainer extends React.Component {
     keywords: []
   }
 
-  componentDidMount() {
+  componentDidMount () {
     if (this.props.editContent) {
-      this.setState({content: this.props.editContent})
+      this.setState({ content: this.props.editContent })
     }
   }
 
@@ -40,8 +40,7 @@ class CodeContainer extends React.Component {
       recognition.onend = () => {
         // console.log('...continue listening...')
         // recognition.start()
-        this.setState({listening: false})
-
+        this.setState({ listening: false })
       }
     } else {
       recognition.stop()
@@ -118,10 +117,35 @@ class CodeContainer extends React.Component {
     return `\n function ${normalTitle} () {   } \n`
   }
 
-  innerClassFn = (name) => {
+  innerClassFn = name => {
     let title = name ? `${name}` : ''
     return ` \n ${title} () {   } \n `
   }
+
+  letPhrase = (name, array) => {
+    let calc = {
+      add: '+',
+      plus: '+',
+      minus: '-',
+      subtract: '-',
+      multiply: '*',
+      times: '*',
+      divide: '/',
+      'in': ' '
+    }
+    console.log(array)
+    let newA = array.map(word => {
+      return calc[word] || word
+    })
+    console.log(newA)
+    let result = newA.join(' ')
+
+    return ` \n let ${name} = ${result} \n `
+  }
+
+  constPhrase = () => {}
+
+  consoleLogPhrase = () => {}
 
   fuzzyMatchBox = FuzzySet(['for', 'loop', 'class', 'function', 'clear'])
 
@@ -130,7 +154,7 @@ class CodeContainer extends React.Component {
     if (
       this.state.keywords.find(word => {
         keyWord = word
-        
+
         if (word) {
           lowerKeyWord = word.toLowerCase()
         }
@@ -152,7 +176,10 @@ class CodeContainer extends React.Component {
         return this.setState({
           content: [
             ...this.state.content.split(' ').slice(0, injectHere + 2),
-            this.returnCodeSnippetWithoutChangingState(parsedTranscript, 'here'),
+            this.returnCodeSnippetWithoutChangingState(
+              parsedTranscript,
+              'here'
+            ),
             this.state.content.split(' ').slice(injectHere + 2)
           ]
             .join(' ')
@@ -182,7 +209,6 @@ class CodeContainer extends React.Component {
             .join(' ')
         })
       } else if (this.state.content.split(' ')[injectHere + 1] === '()') {
-
         return this.setState({
           content: [
             ...this.state.content.split(' ').slice(0, injectHere + 4),
@@ -215,7 +241,11 @@ class CodeContainer extends React.Component {
       return this.setState({
         content: this.state.content + '\n' + this.forLoop()
       })
-    } else if (text.includes('class') || text.includes('cross') || text.includes('glass') ) {
+    } else if (
+      text.includes('class') ||
+      text.includes('cross') ||
+      text.includes('glass')
+    ) {
       let classTitle = textArray[textArray.indexOf('class') + 1]
       if (classTitle !== '') {
         this.fuzzyMatchBox.add(classTitle)
@@ -251,10 +281,26 @@ class CodeContainer extends React.Component {
       return this.setState({
         content: this.state.content + '\n' + this.normalFn(functionName)
       })
+    } else if (text.includes('let')) {
+      let functionName = textArray[textArray.indexOf('let') + 1]
+      let phraseArray
+      if (text.includes('=')) {
+        phraseArray = textArray.slice(textArray.indexOf('=') + 1)
+      } else {
+        phraseArray = textArray.slice(textArray.indexOf('equal') + 1)
+      }
+
+      return this.setState({
+        content:
+          this.state.content + '\n' + this.letPhrase(functionName, phraseArray)
+      })
     }
   }
 
-  returnCodeSnippetWithoutChangingState = (newFinalTranscript, classDets = null) => {
+  returnCodeSnippetWithoutChangingState = (
+    newFinalTranscript,
+    classDets = null
+  ) => {
     console.log(newFinalTranscript)
 
     let text = newFinalTranscript.toLowerCase()
@@ -273,7 +319,11 @@ class CodeContainer extends React.Component {
 
     if (text.includes('for') || text.includes('loop')) {
       return this.forLoop()
-    } else if (text.includes('class') || text.includes('cross') || text.includes('glass')) {
+    } else if (
+      text.includes('class') ||
+      text.includes('cross') ||
+      text.includes('glass')
+    ) {
       let classTitle = textArray[textArray.indexOf('class') + 1]
       if (classTitle !== '') {
         let classTitleArray = classTitle.split('')
@@ -295,25 +345,27 @@ class CodeContainer extends React.Component {
       let functionName = textArray[textArray.indexOf('function') + 1]
       this.setState({ keywords: [...this.state.keywords, functionName] })
       return this.normalFn(functionName)
-    } 
+    } else if (text.includes('let')) {
+      let functionName = textArray[textArray.indexOf('let') + 1]
+      let phraseArray
+      if (text.includes('=')) {
+        phraseArray = textArray.slice(textArray.indexOf('=') + 1)
+      } else {
+        phraseArray = textArray.slice(textArray.indexOf('equal') + 1)
+      }
+
+      return this.letPhrase(functionName, phraseArray)
+    }
   }
 
-  onChange = (event) => {
-
+  onChange = event => {
     // console.log(event)
-    this.setState({content:event})
+    this.setState({ content: event })
     // let someHtml = '<h1>hello</h1>'
     // let execute = () => {
-    // return <div className="Container" dangerouslySetInnerHTML={{__html: 
+    // return <div className="Container" dangerouslySetInnerHTML={{__html:
     //   someHtml}}></div>
     // }
-
-
-
-
-
-
-
 
     // console.log(execute(),(<h2>hello</h2>) )
   }
@@ -342,8 +394,10 @@ class CodeContainer extends React.Component {
           }}
         />
 
-       
-        <Button toggleListen={this.toggleListen} listening={this.state.listening}/>
+        <Button
+          toggleListen={this.toggleListen}
+          listening={this.state.listening}
+        />
         <SaveButton
           snippet={this.state.content}
           username={this.props.username}
