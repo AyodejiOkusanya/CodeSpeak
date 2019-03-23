@@ -74,8 +74,8 @@ class CodeContainer extends React.Component {
       // } else {
       //   console.log('no')
       // }
-      console.log(finalTranscript)
-      console.log(completeTranscript)
+      // console.log(finalTranscript)
+      // console.log(completeTranscript)
       // this.addContentToState(completeTranscript)
       this.addContentToState(finalTranscript)
     }
@@ -129,21 +129,42 @@ class CodeContainer extends React.Component {
       minus: '-',
       subtract: '-',
       multiply: '*',
+      x:'*',
       times: '*',
       divide: '/',
       'in': ' '
     }
-    console.log(array)
+    // console.log(array)
     let newA = array.map(word => {
       return calc[word] || word
     })
-    console.log(newA)
+    // console.log(newA)
     let result = newA.join(' ')
 
     return ` \n let ${name} = ${result} \n `
   }
 
-  constPhrase = () => {}
+  constPhrase = (name, array) => {
+    let calc = {
+      add: '+',
+      plus: '+',
+      minus: '-',
+      subtract: '-',
+      multiply: '*',
+      x:'*',
+      times: '*',
+      divide: '/',
+      'in': ' '
+    }
+    // console.log(array)
+    let newA = array.map(word => {
+      return calc[word] || word
+    })
+    // console.log(newA)
+    let result = newA.join(' ')
+
+    return ` \n const ${name} = ${result} \n `
+  }
 
   consoleLogPhrase = () => {}
 
@@ -161,7 +182,7 @@ class CodeContainer extends React.Component {
         return text.includes(lowerKeyWord)
       })
     ) {
-      console.log('i ran')
+      // console.log('i ran')
       console.log('inside', `keyword is ${keyWord}`)
       let keyWordIndex = textArray.indexOf(lowerKeyWord)
       let parsedTranscript = textArray.slice(0, keyWordIndex).join(' ')
@@ -169,8 +190,8 @@ class CodeContainer extends React.Component {
       let injectHere = this.state.content.split(' ').indexOf(keyWord)
       // console.log(this.state.content.split(' ')[injectHere + 1])
 
-      console.log(`injectHere: ${injectHere}`)
-      console.log(`contentArray:${this.state.content.split(' ')}`)
+      // console.log(`injectHere: ${injectHere}`)
+      // console.log(`contentArray:${this.state.content.split(' ')}`)
 
       if (this.state.content.split(' ')[injectHere - 1] === 'class') {
         return this.setState({
@@ -198,6 +219,7 @@ class CodeContainer extends React.Component {
             .join(' ')
         })
       } else if (this.state.content.split(' ')[injectHere - 1] === 'function') {
+        // console.log('got here')
         return this.setState({
           content: [
             ...this.state.content.split(' ').slice(0, injectHere + 4),
@@ -294,6 +316,19 @@ class CodeContainer extends React.Component {
         content:
           this.state.content + '\n' + this.letPhrase(functionName, phraseArray)
       })
+    } else if (text.includes('constant')) {
+      let functionName = textArray[textArray.indexOf('constant') + 1]
+      let phraseArray
+      if (text.includes('=')) {
+        phraseArray = textArray.slice(textArray.indexOf('=') + 1)
+      } else {
+        phraseArray = textArray.slice(textArray.indexOf('equal') + 1)
+      }
+
+      return this.setState({
+        content:
+          this.state.content + '\n' + this.constPhrase(functionName, phraseArray)
+      })
     }
   }
 
@@ -355,6 +390,17 @@ class CodeContainer extends React.Component {
       }
 
       return this.letPhrase(functionName, phraseArray)
+    } else if (text.includes('constant')) {
+      let functionName = textArray[textArray.indexOf('constant') + 1]
+      let phraseArray
+      if (text.includes('=')) {
+        phraseArray = textArray.slice(textArray.indexOf('=') + 1)
+      } else {
+        phraseArray = textArray.slice(textArray.indexOf('equal') + 1)
+      }
+
+      return  this.constPhrase(functionName, phraseArray)
+      
     }
   }
 
