@@ -38,8 +38,10 @@ class CodeContainer extends React.Component {
     if (this.state.listening) {
       recognition.start()
       recognition.onend = () => {
-        console.log('...continue listening...')
-        recognition.start()
+        // console.log('...continue listening...')
+        // recognition.start()
+        this.setState({listening: false})
+
       }
     } else {
       recognition.stop()
@@ -118,7 +120,7 @@ class CodeContainer extends React.Component {
 
   innerClassFn = (name) => {
     let title = name ? `${name}` : ''
-    return ` \n ${title}() {   } \n `
+    return ` \n ${title} () {   } \n `
   }
 
   fuzzyMatchBox = FuzzySet(['for', 'loop', 'class', 'function', 'clear'])
@@ -128,7 +130,10 @@ class CodeContainer extends React.Component {
     if (
       this.state.keywords.find(word => {
         keyWord = word
-        lowerKeyWord = word.toLowerCase()
+        
+        if (word) {
+          lowerKeyWord = word.toLowerCase()
+        }
         return text.includes(lowerKeyWord)
       })
     ) {
@@ -138,6 +143,7 @@ class CodeContainer extends React.Component {
       let parsedTranscript = textArray.slice(0, keyWordIndex).join(' ')
 
       let injectHere = this.state.content.split(' ').indexOf(keyWord)
+      // console.log(this.state.content.split(' ')[injectHere + 1])
 
       console.log(`injectHere: ${injectHere}`)
       console.log(`contentArray:${this.state.content.split(' ')}`)
@@ -175,6 +181,18 @@ class CodeContainer extends React.Component {
             .split(',')
             .join(' ')
         })
+      } else if (this.state.content.split(' ')[injectHere + 1] === '()') {
+
+        return this.setState({
+          content: [
+            ...this.state.content.split(' ').slice(0, injectHere + 4),
+            this.returnCodeSnippetWithoutChangingState(parsedTranscript),
+            this.state.content.split(' ').slice(injectHere + 4)
+          ]
+            .join(' ')
+            .split(',')
+            .join(' ')
+        })
       }
     }
 
@@ -197,7 +215,7 @@ class CodeContainer extends React.Component {
       return this.setState({
         content: this.state.content + '\n' + this.forLoop()
       })
-    } else if (text.includes('class') || text.includes('cross')) {
+    } else if (text.includes('class') || text.includes('cross') || text.includes('glass') ) {
       let classTitle = textArray[textArray.indexOf('class') + 1]
       if (classTitle !== '') {
         this.fuzzyMatchBox.add(classTitle)
@@ -255,7 +273,7 @@ class CodeContainer extends React.Component {
 
     if (text.includes('for') || text.includes('loop')) {
       return this.forLoop()
-    } else if (text.includes('class') || text.includes('cross')) {
+    } else if (text.includes('class') || text.includes('cross') || text.includes('glass')) {
       let classTitle = textArray[textArray.indexOf('class') + 1]
       if (classTitle !== '') {
         let classTitleArray = classTitle.split('')
@@ -325,7 +343,7 @@ class CodeContainer extends React.Component {
         />
 
        
-        <Button toggleListen={this.toggleListen} />
+        <Button toggleListen={this.toggleListen} listening={this.state.listening}/>
         <SaveButton
           snippet={this.state.content}
           username={this.props.username}

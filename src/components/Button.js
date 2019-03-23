@@ -3,18 +3,16 @@ import './Button.css'
 
 class Button extends React.Component {
 
-  state = {
-    recording: false 
-  }
+  
 
   handleClick = () => {
     this.props.toggleListen()
-    this.setState({recording: !this.state.recording})
+    // this.setState({recording: this.props.listening})
   }
   render () {
     return (
-      <button class={`standardButton ${this.state.recording ? 'Rec' : 'notRec'}`} style={{position:'relative', top:'150px'}} onClick={this.handleClick}>
-        {this.state.recording ? 'Stop' : 'Speak'}
+      <button class={`standardButton ${this.props.listening ? 'Rec' : 'notRec'}`} style={{position:'relative', top:'150px'}} onClick={this.handleClick}>
+        {this.props.listening ? 'Stop' : 'Speak'}
       </button>
     )
   }
