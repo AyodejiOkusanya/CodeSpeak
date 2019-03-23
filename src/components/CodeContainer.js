@@ -129,10 +129,10 @@ class CodeContainer extends React.Component {
       minus: '-',
       subtract: '-',
       multiply: '*',
-      x:'*',
+      x: '*',
       times: '*',
       divide: '/',
-      'in': ' '
+      in: ' '
     }
     // console.log(array)
     let newA = array.map(word => {
@@ -151,10 +151,10 @@ class CodeContainer extends React.Component {
       minus: '-',
       subtract: '-',
       multiply: '*',
-      x:'*',
+      x: '*',
       times: '*',
       divide: '/',
-      'in': ' '
+      in: ' '
     }
     // console.log(array)
     let newA = array.map(word => {
@@ -166,7 +166,28 @@ class CodeContainer extends React.Component {
     return ` \n const ${name} = ${result} \n `
   }
 
-  consoleLogPhrase = () => {}
+  consoleLogPhrase = (string, array) => {
+    let calc = {
+      add: '+',
+      plus: '+',
+      minus: '-',
+      subtract: '-',
+      multiply: '*',
+      x: '*',
+      times: '*',
+      divide: '/',
+      in: ' ',
+      string: ' '
+    }
+    console.log(array)
+    let newA = array.map(word => {
+      return calc[word] || word
+    })
+
+    let result = newA.join(' ')
+
+    return string ? `\n console.log('${result}')` : `console.log(${result}) \n `
+  }
 
   fuzzyMatchBox = FuzzySet(['for', 'loop', 'class', 'function', 'clear'])
 
@@ -327,7 +348,20 @@ class CodeContainer extends React.Component {
 
       return this.setState({
         content:
-          this.state.content + '\n' + this.constPhrase(functionName, phraseArray)
+          this.state.content +
+          '\n' +
+          this.constPhrase(functionName, phraseArray)
+      })
+    } else if (text.includes('console')) {
+      let phraseArray
+      phraseArray = textArray.slice(textArray.indexOf('console.log') + 1)
+      let string = text.includes('string')
+
+      return this.setState({
+        content:
+          this.state.content +
+          '\n' +
+          this.consoleLogPhrase(string, phraseArray)
       })
     }
   }
@@ -399,8 +433,13 @@ class CodeContainer extends React.Component {
         phraseArray = textArray.slice(textArray.indexOf('equal') + 1)
       }
 
-      return  this.constPhrase(functionName, phraseArray)
-      
+      return this.constPhrase(functionName, phraseArray)
+    } else if (text.includes('console')) {
+      let phraseArray
+      phraseArray = textArray.slice(textArray.indexOf('console.log') + 1)
+      let string = text.includes('string')
+
+      return this.consoleLogPhrase(string, phraseArray)
     }
   }
 
