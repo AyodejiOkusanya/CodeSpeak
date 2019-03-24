@@ -42,6 +42,7 @@ class Snippets extends React.Component {
       console.log(content)
       return (
         <div style={{ padding: '10px' }}>
+         
           <Grid.Column>
             <AceEditor
               placeholder='Placeholder Text'
@@ -94,6 +95,16 @@ class Snippets extends React.Component {
   render () {
     return (
       <div>
+        <header
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginRight: '50px'
+          }}
+          className='header'
+        >
+          <h1 className='h1 mega montserrat bold color-emphasis-1'>Dexter</h1>
+        </header>
         <h1
           style={{
             color: 'white',

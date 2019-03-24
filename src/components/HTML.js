@@ -7,7 +7,7 @@ import Soundex from 'soundex-phonetics'
 import 'brace/mode/html'
 import 'brace/theme/terminal'
 import SaveButton from './SaveButton'
-import { Container } from 'semantic-ui-react'
+import { Container, Segment } from 'semantic-ui-react'
 const SpeechRecognition = window.webkitSpeechRecognition
 const recognition = new SpeechRecognition()
 
@@ -36,13 +36,13 @@ class HTML extends React.Component {
   handleListen = () => {
     console.log('listening?', this.state.listening)
     if (this.state.listening) {
-        recognition.start()
-        recognition.onend = () => {
-          // console.log('...continue listening...')
-          // recognition.start()
-          this.setState({ listening: false })
-        }
-      } else {
+      recognition.start()
+      recognition.onend = () => {
+        // console.log('...continue listening...')
+        // recognition.start()
+        this.setState({ listening: false })
+      }
+    } else {
       recognition.stop()
       recognition.onend = () => {
         console.log('Stopped listening per click')
@@ -167,39 +167,39 @@ class HTML extends React.Component {
   boxShape = (num, color) => {
     let result = ''
     let nums = {
-        'one':1,
-        'two':2,
-        'three':3,
-        'four':4,
-        'five':5,
-        'six':6,
-        'seven':7,
-        'eight':8,
-        'nine':9,
-        'ten':10
+      one: 1,
+      two: 2,
+      three: 3,
+      four: 4,
+      five: 5,
+      six: 6,
+      seven: 7,
+      eight: 8,
+      nine: 9,
+      ten: 10
     }
 
     num = nums[num] || num
     for (let i = 0; i < num; i++) {
-        this.setState({
-            jsxArray: [
-              ...this.state.jsxArray,
-              () => {
-                return (
-                  <div
-                    style={{
-                      margin: '10px',
-                      width: '100px',
-                      height: '100px',
-                      backgroundColor: `${color}`
-                    }}
-                  />
-                )
-              }
-            ]
-          })
-          
-          result += `<div
+      this.setState({
+        jsxArray: [
+          ...this.state.jsxArray,
+          () => {
+            return (
+              <div
+                style={{
+                  margin: '10px',
+                  width: '100px',
+                  height: '100px',
+                  backgroundColor: `${color}`
+                }}
+              />
+            )
+          }
+        ]
+      })
+
+      result += `<div
       style={{
         margin: '10px',
         width: '100px',
@@ -207,14 +207,9 @@ class HTML extends React.Component {
         backgroundColor: ${color}
       }}
     />`
-
-
     }
     // console.log(num)
-    return result 
-
-    
-    
+    return result
   }
 
   addContentToState = newFinalTranscript => {
@@ -316,27 +311,23 @@ class HTML extends React.Component {
       console.log('we made it')
       this.setState({ justifyContent: position })
     } else if (text.includes('box') || text.includes('boxes')) {
-
-        if (text.includes('boxes')) {
-            let color =
-            textArray[( textArray.indexOf('boxes')) - 1]
-          let num =
-            textArray[( textArray.indexOf('boxes')) - 2]
-            console.log(num)
-          return this.setState({
-            content: this.state.content + '\n' + this.boxShape(num, color)
-          })
-        } else {
-            let color =
-            textArray[( textArray.indexOf('box')) - 1]
-          let num = 1
-            // console.log(num)
-          return this.setState({
-            content: this.state.content + '\n' + this.boxShape(num, color)
-          })
-        }
-     
+      if (text.includes('boxes')) {
+        let color = textArray[textArray.indexOf('boxes') - 1]
+        let num = textArray[textArray.indexOf('boxes') - 2]
+        console.log(num)
+        return this.setState({
+          content: this.state.content + '\n' + this.boxShape(num, color)
+        })
+      } else {
+        let color = textArray[textArray.indexOf('box') - 1]
+        let num = 1
+        // console.log(num)
+        return this.setState({
+          content: this.state.content + '\n' + this.boxShape(num, color)
+        })
+      }
     }
+
   }
 
   //   onChange = () => {
@@ -358,47 +349,84 @@ class HTML extends React.Component {
 
   render () {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <AceEditor
-          placeholder='Placeholder Text'
-          mode='html'
-          theme='terminal'
-          name='blah2'
-          onLoad={this.onLoad}
-          onChange={this.onChange}
-          fontSize={14}
-          showPrintMargin
-          showGutter
-          highlightActiveLine
-          value={this.state.content}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            enableSnippets: false,
-            showLineNumbers: true,
-            tabSize: 2
-          }}
-        />
-
-        <Button toggleListen={this.toggleListen} listening={this.state.listening}/>
-        <SaveButton
-          snippet={this.state.content}
-          username={this.props.username}
-          editID={this.props.editID}
-        />
-        <Container
+      <div>
+        <header
           style={{
-            flexWrap: `${this.state.flexWrap}`,
-            flexDirection: `${this.state.flexDirection}`,
-            justifyContent: `${this.state.justifyContent}`,
-            color: `${this.state.textColor}`,
-            display: `${this.state.structure}`,
-            backgroundColor: `${this.state.backgroundColor}`
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '50px'
           }}
-          className='inverted'
+          className='header'
         >
-          {this.renderHTML()}
-        </Container>
+          <h1 className='h1 mega montserrat bold color-emphasis-1'>Dexter</h1>
+        </header>
+
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <AceEditor
+            placeholder='Placeholder Text'
+            mode='html'
+            theme='terminal'
+            name='blah2'
+            onLoad={this.onLoad}
+            onChange={this.onChange}
+            fontSize={14}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
+            value={this.state.content}
+            setOptions={{
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true,
+              enableSnippets: false,
+              showLineNumbers: true,
+              tabSize: 2
+            }}
+          />
+
+          <Button
+            toggleListen={this.toggleListen}
+            listening={this.state.listening}
+          />
+          <SaveButton
+            snippet={this.state.content}
+            username={this.props.username}
+            editID={this.props.editID}
+          />
+          <Container
+            style={{
+              flexWrap: `${this.state.flexWrap}`,
+              flexDirection: `${this.state.flexDirection}`,
+              justifyContent: `${this.state.justifyContent}`,
+              color: `${this.state.textColor}`,
+              display: `${this.state.structure}`,
+              backgroundColor: `${this.state.backgroundColor}`
+            }}
+            className='inverted'
+          >
+            {this.renderHTML()}
+          </Container>
+        </div>
+        <Segment style={{fontSize:"20px",marginTop:"50px", height:"300px", width:"500px" }}inverted>
+          Example Commands: 
+          <ul>
+            <p style={{fontSize:"17px",margin:"15px"}}>"Dexter, background colour gold!"</p>
+            <p style={{fontSize:"17px",margin:"15px"}}>"Dexter, h1 tag website!"</p>
+            <p style={{fontSize:"17px",margin:"15px"}}>"Dexter, give me five gold boxes!"</p>
+            <p style={{fontSize:"17px",margin:"15px"}}>"Dexter, display flex!"</p>
+            <p style={{fontSize:"17px",margin:"15px", color:'red'}}>You try more HTML and CSS commands!</p>
+
+
+            <br></br>
+
+
+
+          </ul>
+         
+         
+         
+         
+         
+         </Segment>
       </div>
     )
   }

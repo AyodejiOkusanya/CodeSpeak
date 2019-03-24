@@ -474,8 +474,7 @@ class CodeContainer extends React.Component {
             <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, console log string welcome to javascript!"</p>
             <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, console log string welcome to javascript!"</p>
             <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, put a loop in my hogwarts funciton!"</p>
-            <br></br>
-            <h1>Feel free to try other javascript commands!</h1>
+            <p style={{fontSize:"20px",margin:"15px", color:"red"}}>Feel free to try other javascript commands!</p>
 
 
 

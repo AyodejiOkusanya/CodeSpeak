@@ -6,9 +6,7 @@ import SignInPage from './SignInPage'
 import API from './API'
 import Snippets from './Snippets'
 import HTML from './HTML'
-import { Header } from 'semantic-ui-react'
 import './Header.css'
-
 
 class App extends React.Component {
   state = {
