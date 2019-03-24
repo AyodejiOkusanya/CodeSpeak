@@ -7,6 +7,7 @@ import Soundex from 'soundex-phonetics'
 import 'brace/mode/javascript'
 import 'brace/theme/solarized_dark'
 import SaveButton from './SaveButton'
+import { Segment } from 'semantic-ui-react'
 const SpeechRecognition = window.webkitSpeechRecognition
 const recognition = new SpeechRecognition()
 
@@ -457,7 +458,34 @@ class CodeContainer extends React.Component {
 
   render () {
     return (
+
+      <div>
+        <header style={{display:"flex", justifyContent:"center", marginBottom:"50px"}} className="header">
+        <h1 className="mega montserrat bold color-emphasis-1" >Dexter</h1>
+        </header>
+     
       <div style={{ display: 'flex', justifyContent: 'center' }}>
+       
+         <Segment style={{fontSize:"50px",marginRight:"10px", }}inverted>
+          Example Commands: 
+          <ul>
+            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, please make the function, hogwarts!"</p>
+            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, please make the class movies!"</p>
+            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, console log string welcome to javascript!"</p>
+            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, console log string welcome to javascript!"</p>
+            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, put a loop in my hogwarts funciton!"</p>
+            <br></br>
+            <h1>Feel free to try other javascript commands!</h1>
+
+
+
+          </ul>
+         
+         
+         
+         
+         
+         </Segment>
         <AceEditor
           placeholder='Placeholder Text'
           mode='javascript'
@@ -488,6 +516,7 @@ class CodeContainer extends React.Component {
           username={this.props.username}
           editID={this.props.editID}
         />
+      </div>
       </div>
     )
   }

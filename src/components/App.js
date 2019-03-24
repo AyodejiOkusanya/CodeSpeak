@@ -6,6 +6,9 @@ import SignInPage from './SignInPage'
 import API from './API'
 import Snippets from './Snippets'
 import HTML from './HTML'
+import { Header } from 'semantic-ui-react'
+import './Header.css'
+
 
 class App extends React.Component {
   state = {
@@ -56,6 +59,8 @@ class App extends React.Component {
         }}
       >
         <Navbar signOut={this.signOut} username={this.state.username} handleEditContent={this.handleEditContent}/>
+       
+        <main>
         <Switch>
           <Route
             exact
@@ -95,6 +100,7 @@ class App extends React.Component {
             )}
           />
         </Switch>
+        </main>
       </div>
     )
   }
