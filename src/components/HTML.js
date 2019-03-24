@@ -26,7 +26,8 @@ class HTML extends React.Component {
     textColor: null,
     justifyContent: null,
     flexDirection: null,
-    flexWrap: null
+    flexWrap: null,
+    understood: true
   }
 
   onChange = event => {
@@ -216,6 +217,8 @@ class HTML extends React.Component {
     let text = newFinalTranscript
     let textArray = text.replace(/-/g, ' ').split(' ')
     let theClassName = null
+    this.setState({ understood: true })
+
     console.log(`the text is this: ${text}`)
 
     // let keyWord = null
@@ -326,8 +329,9 @@ class HTML extends React.Component {
           content: this.state.content + '\n' + this.boxShape(num, color)
         })
       }
+    } else {
+      this.setState({ understood: false })
     }
-
   }
 
   //   onChange = () => {
@@ -406,27 +410,45 @@ class HTML extends React.Component {
             {this.renderHTML()}
           </Container>
         </div>
-        <Segment style={{fontSize:"20px",marginTop:"50px", height:"300px", width:"500px" }}inverted>
-          Example Commands: 
-          <ul>
-            <p style={{fontSize:"17px",margin:"15px"}}>"Dexter, background colour gold!"</p>
-            <p style={{fontSize:"17px",margin:"15px"}}>"Dexter, h1 tag website!"</p>
-            <p style={{fontSize:"17px",margin:"15px"}}>"Dexter, give me five gold boxes!"</p>
-            <p style={{fontSize:"17px",margin:"15px"}}>"Dexter, display flex!"</p>
-            <p style={{fontSize:"17px",margin:"15px", color:'red'}}>You try more HTML and CSS commands!</p>
+        {this.state.understood ? (
+          <Segment
+            style={{
+              fontSize: '20px',
+              marginTop: '50px',
+              height: '300px',
+              width: '500px'
+            }}
+            inverted
+          >
+            Example Commands:
+            <ul>
+              <p style={{ fontSize: '17px', margin: '15px' }}>
+                "Dexter, background colour gold!"
+              </p>
+              <p style={{ fontSize: '17px', margin: '15px' }}>
+                "Dexter, h1 tag website!"
+              </p>
+              <p style={{ fontSize: '17px', margin: '15px' }}>
+                "Dexter, give me five gold boxes!"
+              </p>
+              <p style={{ fontSize: '17px', margin: '15px' }}>
+                "Dexter, display flex!"
+              </p>
+              <p style={{ fontSize: '17px', margin: '15px', color: 'red' }}>
+                You try more HTML and CSS commands!
+              </p>
 
-
-            <br></br>
-
-
-
-          </ul>
-         
-         
-         
-         
-         
-         </Segment>
+              <br />
+            </ul>
+          </Segment>
+        ) : (
+          <Segment style={{ fontSize: '50px', marginRight: '10px' }} inverted>
+            {' '}
+            <p style={{ fontSize: '20px', margin: '15px', color: 'red' }}>
+              Dexter - "Sorry I don't understand, please try again."
+            </p>{' '}
+          </Segment>
+        )}
       </div>
     )
   }

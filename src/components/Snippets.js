@@ -3,7 +3,7 @@ import API from './API'
 import 'brace/mode/javascript'
 import 'brace/theme/solarized_dark'
 import AceEditor from 'react-ace'
-import { Grid } from 'semantic-ui-react'
+import { Grid, Button } from 'semantic-ui-react'
 class Snippets extends React.Component {
   state = {
     snippets: []
@@ -64,19 +64,21 @@ class Snippets extends React.Component {
                 tabSize: 2
               }}
             />
-            <button
+            <Button
+            secondary
               style={{ marginTop: '10px' }}
               onClick={(event, codesnip, id) => this.handleEdit(event, content.codesnippet, content.id)}
             >
               Edit
-            </button>
-            <button
+            </Button>
+            <Button
+            secondary
               id={content.id}
               style={{ marginTop: '10px' }}
               onClick={this.handleDelete}
             >
               Delete
-            </button>
+            </Button>
           </Grid.Column>
         </div>
         // </div>

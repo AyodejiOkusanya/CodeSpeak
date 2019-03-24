@@ -7,7 +7,7 @@ import Soundex from 'soundex-phonetics'
 import 'brace/mode/javascript'
 import 'brace/theme/solarized_dark'
 import SaveButton from './SaveButton'
-import { Segment } from 'semantic-ui-react'
+import { Segment, Popup } from 'semantic-ui-react'
 const SpeechRecognition = window.webkitSpeechRecognition
 const recognition = new SpeechRecognition()
 
@@ -21,7 +21,8 @@ class CodeContainer extends React.Component {
     content: `function onload(editor) {
     console.log("Welcome to CodeSpeak")
   }`,
-    keywords: []
+    keywords: [],
+    understood: true
   }
 
   componentDidMount () {
@@ -273,6 +274,7 @@ class CodeContainer extends React.Component {
     let text = newFinalTranscript.toLowerCase()
     let textArray = text.split(' ')
     let keyWord = null
+    this.setState({ understood: true })
 
     console.log(`the keyword is ${keyWord}`)
     console.log(`the text is this: ${text}`)
@@ -364,6 +366,8 @@ class CodeContainer extends React.Component {
           '\n' +
           this.consoleLogPhrase(string, phraseArray)
       })
+    } else {
+      this.setState({ understood: false })
     }
   }
 
@@ -376,6 +380,7 @@ class CodeContainer extends React.Component {
     let text = newFinalTranscript.toLowerCase()
     let textArray = text.split(' ')
     let keyWord = null
+    this.setState({understood:true})
 
     if (this.injectNewCode(text, keyWord, textArray) !== 'end') {
       return
@@ -441,6 +446,8 @@ class CodeContainer extends React.Component {
       let string = text.includes('string')
 
       return this.consoleLogPhrase(string, phraseArray)
+    } else {
+      this.setState({understood:false})
     }
   }
 
@@ -458,64 +465,82 @@ class CodeContainer extends React.Component {
 
   render () {
     return (
-
       <div>
-        <header style={{display:"flex", justifyContent:"center", marginBottom:"50px"}} className="header">
-        <h1 className="mega montserrat bold color-emphasis-1" >Dexter</h1>
-        </header>
-     
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-       
-         <Segment style={{fontSize:"50px",marginRight:"10px", }}inverted>
-          Example Commands: 
-          <ul>
-            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, please make the function, hogwarts!"</p>
-            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, please make the class movies!"</p>
-            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, console log string welcome to javascript!"</p>
-            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, console log string welcome to javascript!"</p>
-            <p style={{fontSize:"20px",margin:"15px"}}>"Dexter, put a loop in my hogwarts funciton!"</p>
-            <p style={{fontSize:"20px",margin:"15px", color:"red"}}>Feel free to try other javascript commands!</p>
-
-
-
-          </ul>
-         
-         
-         
-         
-         
-         </Segment>
-        <AceEditor
-          placeholder='Placeholder Text'
-          mode='javascript'
-          theme='solarized_dark'
-          name='blah2'
-          onLoad={this.onLoad}
-          onChange={this.onChange}
-          fontSize={14}
-          showPrintMargin
-          showGutter
-          highlightActiveLine
-          value={this.state.content}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            enableSnippets: false,
-            showLineNumbers: true,
-            tabSize: 2
+        <header
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '50px'
           }}
-        />
+          className='header'
+        >
+          <h1 className='mega montserrat bold color-emphasis-1'>Dexter</h1>
+        </header>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          {this.state.understood ? (
+            <Segment style={{ fontSize: '50px', marginRight: '10px' }} inverted>
+              Example Commands:
+              <ul>
+                <p style={{ fontSize: '20px', margin: '15px' }}>
+                  "Dexter, please make the function, hogwarts!"
+                </p>
+                <p style={{ fontSize: '20px', margin: '15px' }}>
+                  "Dexter, please make the class movies!"
+                </p>
+                <p style={{ fontSize: '20px', margin: '15px' }}>
+                  "Dexter, console log string welcome to javascript!"
+                </p>
+                <p style={{ fontSize: '20px', margin: '15px' }}>
+                  "Dexter, console log string welcome to javascript!"
+                </p>
+                <p style={{ fontSize: '20px', margin: '15px' }}>
+                  "Dexter, put a loop in my hogwarts funciton!"
+                </p>
+                <p style={{ fontSize: '20px', margin: '15px', color: 'red' }}>
+                  Feel free to try other javascript commands!
+                </p>
+              </ul>
+            </Segment>
+          ) : (
+            <Segment style={{ fontSize: '50px', marginRight: '10px' }} inverted>
+              {' '}
+              <p style={{ fontSize: '20px', margin: '15px', color: 'red' }}>
+              Dexter - "Sorry I don't understand, please try again."
+              </p>{' '}
+            </Segment>
+          )}
 
-        <Button
-          toggleListen={this.toggleListen}
-          listening={this.state.listening}
-        />
-        <SaveButton
-          snippet={this.state.content}
-          username={this.props.username}
-          editID={this.props.editID}
-        />
-      </div>
+          <AceEditor
+            placeholder='Placeholder Text'
+            mode='javascript'
+            theme='solarized_dark'
+            name='blah2'
+            onLoad={this.onLoad}
+            onChange={this.onChange}
+            fontSize={14}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
+            value={this.state.content}
+            setOptions={{
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true,
+              enableSnippets: false,
+              showLineNumbers: true,
+              tabSize: 2
+            }}
+          />
+
+          <Button
+            toggleListen={this.toggleListen}
+            listening={this.state.listening}
+          />
+          <SaveButton
+            snippet={this.state.content}
+            username={this.props.username}
+            editID={this.props.editID}
+          />
+        </div>
       </div>
     )
   }
