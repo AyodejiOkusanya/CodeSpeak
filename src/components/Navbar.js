@@ -29,8 +29,8 @@ class Navbar extends React.Component {
         <Menu inverted pointing secondary>
           <Link to='/record'>
             <Menu.Item
-              name='record'
-              active={activeItem === 'record'}
+              name='JS'
+              active={activeItem === 'JS'}
               onClick={this.handleRecordClick}
             />
           </Link>

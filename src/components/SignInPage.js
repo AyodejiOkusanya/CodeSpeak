@@ -14,7 +14,7 @@ class SignInPage extends React.Component {
     const user = this.state
     API.signin(user).then(data => {
       if (data.error) {
-        alert('something is wrong')
+        alert('Username/Password combo not recognized!')
       } else {
         // console.log('here')
         signIn(data)
@@ -34,7 +34,7 @@ class SignInPage extends React.Component {
     const user = this.state
     API.signup(user).then(data => {
       if (data.error) {
-        alert('something is wrong')
+        alert('That username is taken!')
       } else {
         // console.log('here')
         signIn(data)
@@ -53,6 +53,16 @@ class SignInPage extends React.Component {
           width: '100%'
         }}
       >
+      <header
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '50px'
+          }}
+          className='header'
+        >
+          <h1 className='h1 mega montserrat bold color-emphasis-1'>Dexter</h1>
+        </header>
         <div>
           <Form
             className='inverted'
@@ -75,6 +85,7 @@ class SignInPage extends React.Component {
             <Form.Field style={{ padding: '10px' }}>
               <label>Password</label>
               <input
+                type="password"
                 onChange={this.handleChange}
                 value={this.state.password}
                 name='password'
