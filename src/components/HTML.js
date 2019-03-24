@@ -435,7 +435,7 @@ class HTML extends React.Component {
                 "Dexter, display flex!"
               </p>
               <p style={{ fontSize: '17px', margin: '15px', color: 'red' }}>
-                You try more HTML and CSS commands!
+                You can try more HTML and CSS commands!
               </p>
 
               <br />

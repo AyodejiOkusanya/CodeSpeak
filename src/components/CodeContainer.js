@@ -19,7 +19,7 @@ class CodeContainer extends React.Component {
   state = {
     listening: false,
     content: `function onload(editor) {
-    console.log("Welcome to CodeSpeak")
+    console.log("My name is Dexter, talk to me...")
   }`,
     keywords: [],
     understood: true
@@ -488,10 +488,7 @@ class CodeContainer extends React.Component {
                   "Dexter, please make the class movies!"
                 </p>
                 <p style={{ fontSize: '20px', margin: '15px' }}>
-                  "Dexter, console log string welcome to javascript!"
-                </p>
-                <p style={{ fontSize: '20px', margin: '15px' }}>
-                  "Dexter, console log string welcome to javascript!"
+                  "Dexter, console log string "welcome to javascript!" "
                 </p>
                 <p style={{ fontSize: '20px', margin: '15px' }}>
                   "Dexter, put a loop in my hogwarts funciton!"
