@@ -27,15 +27,19 @@ class HTML extends React.Component {
     justifyContent: null,
     flexDirection: null,
     flexWrap: null,
-    understood: true
+    understood: true,
+    showingSavedDisplay: false
   }
 
   onChange = event => {
     this.setState({ content: event })
+    this.setState({ showingSavedDisplay: false })
   }
 
   handleListen = () => {
     console.log('listening?', this.state.listening)
+    this.setState({ showingSavedDisplay: false })
+
     if (this.state.listening) {
       recognition.start()
       recognition.onend = () => {
@@ -84,6 +88,10 @@ class HTML extends React.Component {
 
   addTexttoTextArray = () => {
     this.setState({ textArray: [...this.state.textArray, this.state.codeText] })
+  }
+
+  showSavedDisplay = () => {
+    this.setState({showingSavedDisplay: true})
   }
 
   h1Tag = (name, className) => {
@@ -392,6 +400,8 @@ class HTML extends React.Component {
             listening={this.state.listening}
           />
           <SaveButton
+            showSavedDisplay={this.showSavedDisplay}
+            showingSavedDisplay={this.state.showingSavedDisplay}
             snippet={this.state.content}
             username={this.props.username}
             editID={this.props.editID}

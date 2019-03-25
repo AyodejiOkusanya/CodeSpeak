@@ -42,6 +42,8 @@ class CodeContainer extends React.Component {
 
   handleListen = () => {
     console.log('listening?', this.state.listening)
+    this.setState({showingSavedDisplay: false}) 
+
     if (this.state.listening) {
       recognition.start()
       recognition.onend = () => {
@@ -487,6 +489,9 @@ class CodeContainer extends React.Component {
             <Segment style={{ fontSize: '50px', marginRight: '10px' }} inverted>
               Example Commands:
               <ul>
+              <p style={{ color: 'green', fontSize: '20px', margin: '15px' }}>
+                  Click the 'Speak' button to give a command
+                </p>
                 <p style={{ fontSize: '20px', margin: '15px' }}>
                   "Dexter, please make the function, hogwarts!"
                 </p>
