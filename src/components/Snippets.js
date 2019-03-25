@@ -3,10 +3,14 @@ import API from './API'
 import 'brace/mode/javascript'
 import 'brace/theme/solarized_dark'
 import AceEditor from 'react-ace'
+import './alert.css'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { Grid, Button } from 'semantic-ui-react'
 class Snippets extends React.Component {
   state = {
-    snippets: []
+    snippets: [],
+    value: '',
+    copied: false
   }
   getSnippets = () => {
     return API.getSnippets().then(snippets => this.setState({ snippets }))
@@ -30,19 +34,21 @@ class Snippets extends React.Component {
     })
   }
 
-  handleEdit = (event,codesnip, id) => {
+  handleEdit = (event, codesnip, id) => {
     this.props.handleEditContent(codesnip, id)
-    
+
     this.props.history.push('/record')
   }
 
+  // copyFunction = (event, codesnip) => {
+  //   let copyText = codesnip
+  // }
 
   renderCodeSnippets = () => {
     return this.state.snippets.map(content => {
       console.log(content)
       return (
         <div style={{ padding: '10px' }}>
-         
           <Grid.Column>
             <AceEditor
               placeholder='Placeholder Text'
@@ -65,20 +71,34 @@ class Snippets extends React.Component {
               }}
             />
             <Button
-            secondary
+              secondary
               style={{ marginTop: '10px' }}
-              onClick={(event, codesnip, id) => this.handleEdit(event, content.codesnippet, content.id)}
+              onClick={(event, codesnip, id) =>
+                this.handleEdit(event, content.codesnippet, content.id)
+              }
             >
               Edit
             </Button>
             <Button
-            secondary
+              secondary
               id={content.id}
               style={{ marginTop: '10px' }}
               onClick={this.handleDelete}
             >
               Delete
             </Button>
+            (
+            <CopyToClipboard
+              text={content.codesnippet}
+              onCopy={() => {
+                alert('Copied!')
+              }}
+            >
+              <Button secondary style={{fontSize:"17px", marginRight:"0px", marginLeft:"7px", marginTop: '10px' }}>
+                Copy to clipboard with button
+              </Button>
+            </CopyToClipboard>
+            )}
           </Grid.Column>
         </div>
         // </div>
@@ -120,7 +140,9 @@ class Snippets extends React.Component {
 
         {/* <div style={{ display: 'flex', justifyContent: 'center' }}> */}
         <Grid container columns={3}>
-          {this.renderCodeSnippets()}
+          {this.renderCodeSnippets()
+            .slice()
+            .reverse()}
         </Grid>
         {/* </div> */}
       </div>
