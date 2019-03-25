@@ -17,7 +17,7 @@ class Navbar extends React.Component {
   handleRecordClick = (e, {name}) => {
     this.setState({ activeItem: name })
     this.props.handleEditContent(`function onload(editor) {
-      console.log("Welcome to CodeSpeak")
+      console.log("My name is Dexter, talk to me...")
     }`)
   }
 

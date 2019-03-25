@@ -22,7 +22,8 @@ class CodeContainer extends React.Component {
     console.log("My name is Dexter, talk to me...")
   }`,
     keywords: [],
-    understood: true
+    understood: true,
+    showingSavedDisplay: false 
   }
 
   componentDidMount () {
@@ -33,6 +34,10 @@ class CodeContainer extends React.Component {
 
   onChange = event => {
     this.setState({ content: event })
+  }
+
+  showSavedDisplay = () => {
+    this.setState({showingSavedDisplay: true})
   }
 
   handleListen = () => {
@@ -315,7 +320,7 @@ class CodeContainer extends React.Component {
       return this.setState({
         content: this.state.content + '\n' + this.arrowFn(functionName)
       })
-    } else if (text.includes('clear')) {
+    } else if (text.includes('clear') || text.includes('Claire')) {
       this.setState({ content: '', keywords: [] })
     } else if (text.includes('function')) {
       let functionName = textArray[textArray.indexOf('function') + 1]
@@ -414,7 +419,7 @@ class CodeContainer extends React.Component {
       this.setState({ keywords: [...this.state.keywords, functionName] })
 
       return this.arrowFn(functionName)
-    } else if (text.includes('clear')) {
+    } else if (text.includes('clear') || text.includes('Claire')) {
       return this.setState({ content: '' })
     } else if (text.includes('function')) {
       let functionName = textArray[textArray.indexOf('function') + 1]
@@ -452,6 +457,7 @@ class CodeContainer extends React.Component {
   }
 
   onChange = event => {
+    this.setState({showingSavedDisplay: false}) 
     // console.log(event)
     this.setState({ content: event })
     // let someHtml = '<h1>hello</h1>'
@@ -491,7 +497,7 @@ class CodeContainer extends React.Component {
                   "Dexter, console log string "welcome to javascript!" "
                 </p>
                 <p style={{ fontSize: '20px', margin: '15px' }}>
-                  "Dexter, put a loop in my hogwarts funciton!"
+                  "Dexter, put a loop in my hogwarts function!"
                 </p>
                 <p style={{ fontSize: '20px', margin: '15px', color: 'red' }}>
                   Feel free to try other javascript commands!
@@ -533,6 +539,8 @@ class CodeContainer extends React.Component {
             listening={this.state.listening}
           />
           <SaveButton
+            showSavedDisplay={this.showSavedDisplay}
+            showingSavedDisplay={this.state.showingSavedDisplay}
             snippet={this.state.content}
             username={this.props.username}
             editID={this.props.editID}
