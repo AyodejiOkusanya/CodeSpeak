@@ -28,7 +28,8 @@ class HTML extends React.Component {
     flexDirection: null,
     flexWrap: null,
     understood: true,
-    showingSavedDisplay: false
+    showingSavedDisplay: false,
+    selectedYouTubeVideo: null 
   }
 
   onChange = event => {
@@ -337,6 +338,17 @@ class HTML extends React.Component {
           content: this.state.content + '\n' + this.boxShape(num, color)
         })
       }
+    } else if (text.includes('video')) {
+        let searchTerm = textArray.slice(textArray.indexOf('video') + 1).join(' ')
+        searchTerm = searchTerm.split(' ').join('+')
+        const YOUTUBE = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${searchTerm}+&key=AIzaSyCvd5ISDIyQ1if06rQ7NC1fvPuqi3zUhlY`
+        return (
+          fetch(YOUTUBE)
+            .then(resp => resp.json())
+            // .then(console.log)
+            .then(obj => this.setState({ selectedYouTubeVideo: obj.items[0] }))
+        )
+    
     } else {
       this.setState({ understood: false })
     }
@@ -357,6 +369,15 @@ class HTML extends React.Component {
     return this.state.jsxArray.map(fn => {
       return fn()
     })
+  }
+
+  renderVideo = () => {
+      const video = this.state.selectedYouTubeVideo 
+    const videoSrc = `https://www.youtube.com/embed/${video.id.videoId}?autoplay=1`
+
+
+    return <iframe  width="300px" height="200px" src={videoSrc} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+
   }
 
   render () {
@@ -418,6 +439,7 @@ class HTML extends React.Component {
             className='inverted'
           >
             {this.renderHTML()}
+            {this.state.selectedYouTubeVideo ? this.renderVideo() : null }
           </Container>
         </div>
         {this.state.understood ? (
