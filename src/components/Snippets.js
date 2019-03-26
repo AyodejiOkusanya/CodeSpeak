@@ -6,6 +6,7 @@ import AceEditor from 'react-ace'
 import './alert.css'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { Grid, Button } from 'semantic-ui-react'
+import Popup from 'reactjs-popup'
 class Snippets extends React.Component {
   state = {
     snippets: [],
@@ -94,10 +95,44 @@ class Snippets extends React.Component {
                 alert('Copied!')
               }}
             >
-              <Button secondary style={{fontSize:"17px", marginRight:"0px", marginLeft:"7px", marginTop: '10px' }}>
-                Copy to clipboard with button
-              </Button>
+            <Button
+                  secondary
+                  style={{
+                    fontSize: '17px',
+                    marginRight: '0px',
+                    marginLeft: '106px',
+                    marginTop: '10px'
+                  }}
+                >
+                  Copy to clipboard
+                </Button>
+            
             </CopyToClipboard>
+            {/* <Popup
+              trigger={
+                <Button
+                  secondary
+                  style={{
+                    fontSize: '17px',
+                    marginRight: '0px',
+                    marginLeft: '7px',
+                    marginTop: '10px'
+                  }}
+                >
+                  Copy to clipboard
+                </Button>
+              }
+              position='top left'
+            >
+              {close => (
+                <div>
+                  Copied!
+                  <a className='close' onClick={close}>
+                    &times;
+                  </a>
+                </div>
+              )}
+            </Popup> */}
             )}
           </Grid.Column>
         </div>
