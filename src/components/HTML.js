@@ -29,7 +29,7 @@ class HTML extends React.Component {
     flexWrap: null,
     understood: true,
     showingSavedDisplay: false,
-    selectedYouTubeVideo: null 
+    selectedYouTubeVideos: [] 
   }
 
   onChange = event => {
@@ -240,7 +240,21 @@ class HTML extends React.Component {
 
     // }
 
-    if (text.includes('class')) {
+     if (text.includes('video')) {
+        let searchTerm = textArray.slice(textArray.indexOf('video') + 1).join(' ')
+
+         this.setState({content: this.state.content + '\n' + `<iframe  width="300px" height="200px" src=${searchTerm} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>`
+        })
+        searchTerm = searchTerm.split(' ').join('+')
+        const YOUTUBE = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${searchTerm}+&key=AIzaSyCvd5ISDIyQ1if06rQ7NC1fvPuqi3zUhlY`
+        return (
+          fetch(YOUTUBE)
+            .then(resp => resp.json())
+            // .then(console.log)
+            .then(obj => this.setState({ selectedYouTubeVideos: [...this.state.selectedYouTubeVideos, obj.items[0] ]}))
+        )
+    
+    } else if (text.includes('class')) {
       theClassName = textArray[textArray.indexOf('class') + 1]
       this.setState({ keywords: [...this.state.keywords, theClassName] })
       console.table(textArray)
@@ -317,7 +331,7 @@ class HTML extends React.Component {
       let colour = textArray[textArray.indexOf('colour') + 1]
       this.setState({ backgroundColor: colour })
     } else if (text.includes('clear')) {
-      this.setState({ content: '', jsxArray: [] })
+      this.setState({ content: '', jsxArray: [], selectedYouTubeVideos: [] })
     } else if (text.includes('justify') && text.includes('content')) {
       let position = textArray[textArray.indexOf('content') + 1]
       console.log('we made it')
@@ -338,18 +352,7 @@ class HTML extends React.Component {
           content: this.state.content + '\n' + this.boxShape(num, color)
         })
       }
-    } else if (text.includes('video')) {
-        let searchTerm = textArray.slice(textArray.indexOf('video') + 1).join(' ')
-        searchTerm = searchTerm.split(' ').join('+')
-        const YOUTUBE = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${searchTerm}+&key=AIzaSyCvd5ISDIyQ1if06rQ7NC1fvPuqi3zUhlY`
-        return (
-          fetch(YOUTUBE)
-            .then(resp => resp.json())
-            // .then(console.log)
-            .then(obj => this.setState({ selectedYouTubeVideo: obj.items[0] }))
-        )
-    
-    } else {
+    }  else {
       this.setState({ understood: false })
     }
   }
@@ -371,12 +374,14 @@ class HTML extends React.Component {
     })
   }
 
-  renderVideo = () => {
-      const video = this.state.selectedYouTubeVideo 
-    const videoSrc = `https://www.youtube.com/embed/${video.id.videoId}?autoplay=1`
+  renderVideos = () => {
+      return this.state.selectedYouTubeVideos.map((video) => {
+        const videoSrc = `https://www.youtube.com/embed/${video.id.videoId}?autoplay=1`
+        return <iframe  width="300px" height="200px" src={videoSrc} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+
+      })
 
 
-    return <iframe  width="300px" height="200px" src={videoSrc} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 
   }
 
@@ -439,13 +444,13 @@ class HTML extends React.Component {
             className='inverted'
           >
             {this.renderHTML()}
-            {this.state.selectedYouTubeVideo ? this.renderVideo() : null }
+            {this.state.selectedYouTubeVideos.length ? this.renderVideos() : null }
           </Container>
         </div>
         {this.state.understood ? (
           <Segment
             style={{
-              fontSize: '20px',
+              fontSize: '18px',
               marginTop: '50px',
               height: '300px',
               width: '500px'
@@ -454,19 +459,23 @@ class HTML extends React.Component {
           >
             Example Commands:
             <ul>
-              <p style={{ fontSize: '17px', margin: '15px' }}>
+              <p style={{ fontSize: '16px', margin: '12px' }}>
                 "Dexter, background colour gold!"
               </p>
-              <p style={{ fontSize: '17px', margin: '15px' }}>
+              <p style={{ fontSize: '16px', margin: '12px' }}>
                 "Dexter, h1 tag website!"
               </p>
-              <p style={{ fontSize: '17px', margin: '15px' }}>
+              <p style={{ fontSize: '16px', margin: '12px' }}>
+                "Dexter, embed video cats!"
+              </p>
+
+              <p style={{ fontSize: '16px', margin: '12px' }}>
                 "Dexter, give me five gold boxes!"
               </p>
-              <p style={{ fontSize: '17px', margin: '15px' }}>
+              <p style={{ fontSize: '16px', margin: '12px' }}>
                 "Dexter, display flex!"
               </p>
-              <p style={{ fontSize: '17px', margin: '15px', color: 'red' }}>
+              <p style={{ fontSize: '16px', padding:'0px', margin: '0px', color: 'red' }}>
                 You can try more HTML and CSS commands!
               </p>
 
