@@ -67,12 +67,6 @@ class CodeContainer extends React.Component {
           finalTranscript += transcript + ' '
         }
       }
-      let fTArray = finalTranscript.split(' ').map(word => {
-        return this.fuzzyMatchBox.get(word)
-          ? this.fuzzyMatchBox.get(word)[0][1]
-          : word
-      })
-
       this.addContentToState(finalTranscript)
     }
   }
