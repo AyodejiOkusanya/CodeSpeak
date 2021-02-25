@@ -29,7 +29,7 @@ class HTML extends React.Component {
     flexWrap: null,
     understood: true,
     showingSavedDisplay: false,
-    selectedYouTubeVideos: [] 
+    selectedYouTubeVideos: []
   }
 
   onChange = event => {
@@ -38,26 +38,20 @@ class HTML extends React.Component {
   }
 
   handleListen = () => {
-    console.log('listening?', this.state.listening)
     this.setState({ showingSavedDisplay: false })
 
     if (this.state.listening) {
       recognition.start()
       recognition.onend = () => {
-        // console.log('...continue listening...')
         // recognition.start()
         this.setState({ listening: false })
       }
     } else {
       recognition.stop()
-      recognition.onend = () => {
-        console.log('Stopped listening per click')
-      }
+      recognition.onend = () => {}
     }
 
-    recognition.onstart = () => {
-      console.log('Listening!')
-    }
+    recognition.onstart = () => {}
 
     let finalTranscript = ''
     recognition.onresult = event => {
@@ -69,11 +63,8 @@ class HTML extends React.Component {
       }
 
       // if (Soundex('for loop')=== Soundex('phone')) {
-      //   console.log('yes')
       // } else {
-      //   console.log('no')
       // }
-      console.log(finalTranscript)
       // this.addContentToState(completeTranscript)
       this.addContentToState(finalTranscript)
     }
@@ -92,7 +83,7 @@ class HTML extends React.Component {
   }
 
   showSavedDisplay = () => {
-    this.setState({showingSavedDisplay: true})
+    this.setState({ showingSavedDisplay: true })
   }
 
   h1Tag = (name, className) => {
@@ -218,7 +209,6 @@ class HTML extends React.Component {
       }}
     />`
     }
-    // console.log(num)
     return result
   }
 
@@ -228,32 +218,27 @@ class HTML extends React.Component {
     let theClassName = null
     this.setState({ understood: true })
 
-    console.log(`the text is this: ${text}`)
+    if (text.includes('video')) {
+      let searchTerm = textArray.slice(textArray.indexOf('video') + 1).join(' ')
 
-    // let keyWord = null
-    // if (
-    //   this.state.keywords.find(word => {
-    //     keyWord = word
-    //     return text.includes(word)
-    //   })
-    // ) {
-
-    // }
-
-     if (text.includes('video')) {
-        let searchTerm = textArray.slice(textArray.indexOf('video') + 1).join(' ')
-
-         this.setState({content: this.state.content + '\n' + `<iframe  width="300px" height="200px" src=${searchTerm} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>`
-        })
-        searchTerm = searchTerm.split(' ').join('+')
-        const YOUTUBE = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${searchTerm}+&key=AIzaSyCvd5ISDIyQ1if06rQ7NC1fvPuqi3zUhlY`
-        return (
-          fetch(YOUTUBE)
-            .then(resp => resp.json())
-            // .then(console.log)
-            .then(obj => this.setState({ selectedYouTubeVideos: [...this.state.selectedYouTubeVideos, obj.items[0] ]}))
+      this.setState({
+        content:
+          this.state.content +
+          '\n' +
+          `<iframe  width="300px" height="200px" src=${searchTerm} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>`
+      })
+      searchTerm = searchTerm.split(' ').join('+')
+      const YOUTUBE = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${searchTerm}+&key=AIzaSyBordtiyWri-OFE-6QdM1118LkDDWRHSKs`
+      return fetch(YOUTUBE)
+        .then(resp => resp.json())
+        .then(obj =>
+          this.setState({
+            selectedYouTubeVideos: [
+              ...this.state.selectedYouTubeVideos,
+              obj.items[0]
+            ]
+          })
         )
-    
     } else if (text.includes('class')) {
       theClassName = textArray[textArray.indexOf('class') + 1]
       this.setState({ keywords: [...this.state.keywords, theClassName] })
@@ -267,7 +252,6 @@ class HTML extends React.Component {
     }
 
     if (text.includes('H1')) {
-      console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H1') + 2).join(' ')
 
       return this.setState({
@@ -275,7 +259,6 @@ class HTML extends React.Component {
           this.state.content + '\n' + this.h1Tag(tagContent, theClassName)
       })
     } else if (text.includes('H2')) {
-      console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H2') + 2).join(' ')
 
       return this.setState({
@@ -283,7 +266,6 @@ class HTML extends React.Component {
           this.state.content + '\n' + this.h2Tag(tagContent, theClassName)
       })
     } else if (text.includes('H3')) {
-      console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H3') + 2).join(' ')
 
       return this.setState({
@@ -291,7 +273,6 @@ class HTML extends React.Component {
           this.state.content + '\n' + this.h3Tag(tagContent, theClassName)
       })
     } else if (text.includes('H4')) {
-      console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('H4') + 2).join(' ')
 
       return this.setState({
@@ -302,22 +283,17 @@ class HTML extends React.Component {
       let display = textArray[textArray.indexOf('display') + 1]
       this.setState({ structure: display })
     } else if (text.includes('flex-wrap')) {
-      // console.log(textArray)
       let wrap = textArray
         .slice(textArray.indexOf('wrap') + 1)
         .join(' ')
         .replace(' ', '-')
-      console.log(wrap)
       this.setState({ flexWrap: wrap })
     } else if (text.includes('flex-direction')) {
-      // console.log(textArray)
       let direction = textArray
         .slice(textArray.indexOf('direction') + 1)
         .join(' ')
-      console.log(direction)
       this.setState({ flexDirection: direction })
     } else if (text.includes('p') || text.includes('tag')) {
-      console.log('in the html')
       let tagContent = textArray.slice(textArray.indexOf('p') + 2).join(' ')
 
       return this.setState({
@@ -334,25 +310,22 @@ class HTML extends React.Component {
       this.setState({ content: '', jsxArray: [], selectedYouTubeVideos: [] })
     } else if (text.includes('justify') && text.includes('content')) {
       let position = textArray[textArray.indexOf('content') + 1]
-      console.log('we made it')
       this.setState({ justifyContent: position })
     } else if (text.includes('box') || text.includes('boxes')) {
       if (text.includes('boxes')) {
         let color = textArray[textArray.indexOf('boxes') - 1]
         let num = textArray[textArray.indexOf('boxes') - 2]
-        console.log(num)
         return this.setState({
           content: this.state.content + '\n' + this.boxShape(num, color)
         })
       } else {
         let color = textArray[textArray.indexOf('box') - 1]
         let num = 1
-        // console.log(num)
         return this.setState({
           content: this.state.content + '\n' + this.boxShape(num, color)
         })
       }
-    }  else {
+    } else {
       this.setState({ understood: false })
     }
   }
@@ -365,7 +338,6 @@ class HTML extends React.Component {
   //   someHtml}}></div>
   // }
 
-  // console.log(execute(),(<h2>hello</h2>) )
   //   }
 
   renderHTML = () => {
@@ -375,14 +347,21 @@ class HTML extends React.Component {
   }
 
   renderVideos = () => {
-      return this.state.selectedYouTubeVideos.map((video) => {
-        const videoSrc = `https://www.youtube.com/embed/${video.id.videoId}?autoplay=1`
-        return <iframe  width="300px" height="200px" src={videoSrc} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-
-      })
-
-
-
+    return this.state.selectedYouTubeVideos.map(video => {
+      const videoSrc = `https://www.youtube.com/embed/${
+        video.id.videoId
+      }?autoplay=1`
+      return (
+        <iframe
+          width='300px'
+          height='200px'
+          src={videoSrc}
+          frameBorder='0'
+          allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+          allowFullScreen
+        />
+      )
+    })
   }
 
   render () {
@@ -444,7 +423,9 @@ class HTML extends React.Component {
             className='inverted'
           >
             {this.renderHTML()}
-            {this.state.selectedYouTubeVideos.length ? this.renderVideos() : null }
+            {this.state.selectedYouTubeVideos.length
+              ? this.renderVideos()
+              : null}
           </Container>
         </div>
         {this.state.understood ? (
@@ -475,7 +456,14 @@ class HTML extends React.Component {
               <p style={{ fontSize: '16px', margin: '12px' }}>
                 "Dexter, display flex!"
               </p>
-              <p style={{ fontSize: '16px', padding:'0px', margin: '0px', color: 'red' }}>
+              <p
+                style={{
+                  fontSize: '16px',
+                  padding: '0px',
+                  margin: '0px',
+                  color: 'red'
+                }}
+              >
                 You can try more HTML and CSS commands!
               </p>
 

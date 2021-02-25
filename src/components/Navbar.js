@@ -14,7 +14,7 @@ class Navbar extends React.Component {
     this.props.signOut()
   }
 
-  handleRecordClick = (e, {name}) => {
+  handleRecordClick = (e, { name }) => {
     this.setState({ activeItem: name })
     this.props.handleEditContent(`function onload(editor) {
       console.log("My name is Dexter, talk to me...")
@@ -34,41 +34,13 @@ class Navbar extends React.Component {
               onClick={this.handleRecordClick}
             />
           </Link>
-          <Link to='/snippets'>
+          <Link to='/html'>
             <Menu.Item
-              name='snippets'
-              active={activeItem === 'snippets'}
+              name='HTML'
+              active={activeItem === 'HTML'}
               onClick={this.handleItemClick}
             />
           </Link>
-          <Link to='/html'>
-          <Menu.Item
-            name='HTML'
-            active={activeItem === 'HTML'}
-            onClick={this.handleItemClick}
-          />
-          </Link>
-          {this.props.username ? (
-            <Menu.Menu position='right'>
-              <Link to='/'>
-                <Menu.Item
-                  name='logout'
-                  active={activeItem === 'logout'}
-                  onClick={this.handleClick}
-                />
-              </Link>
-            </Menu.Menu>
-          ) : (
-            <Menu.Menu position='right'>
-              <Link to='/'>
-                <Menu.Item
-                  name='login'
-                  active={activeItem === 'login'}
-                  onClick={this.handleClick}
-                />
-              </Link>
-            </Menu.Menu>
-          ) }
         </Menu>
       </div>
     )
