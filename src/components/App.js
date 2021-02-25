@@ -1,8 +1,7 @@
 import React from 'react'
 import CodeContainer from './CodeContainer'
-import { Route, withRouter, Switch, Link } from 'react-router-dom'
+import { Route, withRouter, Switch } from 'react-router-dom'
 import Navbar from './Navbar'
-import Snippets from './Snippets'
 import HTML from './HTML'
 import './Header.css'
 

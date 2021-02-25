@@ -1,12 +1,8 @@
 import React from 'react'
 import Button from './Button'
-import brace from 'brace'
 import AceEditor from 'react-ace'
-import FuzzySet from 'fuzzyset.js'
-import Soundex from 'soundex-phonetics'
 import 'brace/mode/html'
 import 'brace/theme/terminal'
-import SaveButton from './SaveButton'
 import { Container, Segment } from 'semantic-ui-react'
 const SpeechRecognition = window.webkitSpeechRecognition
 const recognition = new SpeechRecognition()
@@ -359,6 +355,7 @@ class HTML extends React.Component {
           frameBorder='0'
           allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
           allowFullScreen
+          title='youtube-iframe'
         />
       )
     })
@@ -403,13 +400,6 @@ class HTML extends React.Component {
           <Button
             toggleListen={this.toggleListen}
             listening={this.state.listening}
-          />
-          <SaveButton
-            showSavedDisplay={this.showSavedDisplay}
-            showingSavedDisplay={this.state.showingSavedDisplay}
-            snippet={this.state.content}
-            username={this.props.username}
-            editID={this.props.editID}
           />
           <Container
             style={{

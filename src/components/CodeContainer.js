@@ -1,13 +1,10 @@
 import React from 'react'
 import Button from './Button'
-import brace from 'brace'
 import AceEditor from 'react-ace'
 import FuzzySet from 'fuzzyset.js'
-import Soundex from 'soundex-phonetics'
 import 'brace/mode/javascript'
 import 'brace/theme/solarized_dark'
-import SaveButton from './SaveButton'
-import { Segment, Popup } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react'
 const SpeechRecognition = window.webkitSpeechRecognition
 const recognition = new SpeechRecognition()
 
@@ -23,7 +20,7 @@ class CodeContainer extends React.Component {
   }`,
     keywords: [],
     understood: true,
-    showingSavedDisplay: false 
+    showingSavedDisplay: false
   }
 
   componentDidMount () {
@@ -37,12 +34,12 @@ class CodeContainer extends React.Component {
   }
 
   showSavedDisplay = () => {
-    this.setState({showingSavedDisplay: true})
+    this.setState({ showingSavedDisplay: true })
   }
 
   handleListen = () => {
     console.log('listening?', this.state.listening)
-    this.setState({showingSavedDisplay: false}) 
+    this.setState({ showingSavedDisplay: false })
 
     if (this.state.listening) {
       recognition.start()
@@ -71,21 +68,11 @@ class CodeContainer extends React.Component {
         }
       }
       let fTArray = finalTranscript.split(' ').map(word => {
-        // console.log(this.fuzzyMatchBox.get(word)[1] )
         return this.fuzzyMatchBox.get(word)
           ? this.fuzzyMatchBox.get(word)[0][1]
           : word
       })
 
-      let completeTranscript = fTArray.join(' ')
-      // if (Soundex('for loop')=== Soundex('phone')) {
-      //   console.log('yes')
-      // } else {
-      //   console.log('no')
-      // }
-      // console.log(finalTranscript)
-      // console.log(completeTranscript)
-      // this.addContentToState(completeTranscript)
       this.addContentToState(finalTranscript)
     }
   }
@@ -387,7 +374,7 @@ class CodeContainer extends React.Component {
     let text = newFinalTranscript.toLowerCase()
     let textArray = text.split(' ')
     let keyWord = null
-    this.setState({understood:true})
+    this.setState({ understood: true })
 
     if (this.injectNewCode(text, keyWord, textArray) !== 'end') {
       return
@@ -454,12 +441,12 @@ class CodeContainer extends React.Component {
 
       return this.consoleLogPhrase(string, phraseArray)
     } else {
-      this.setState({understood:false})
+      this.setState({ understood: false })
     }
   }
 
   onChange = event => {
-    this.setState({showingSavedDisplay: false}) 
+    this.setState({ showingSavedDisplay: false })
     // console.log(event)
     this.setState({ content: event })
     // let someHtml = '<h1>hello</h1>'
@@ -489,7 +476,7 @@ class CodeContainer extends React.Component {
             <Segment style={{ fontSize: '50px', marginRight: '10px' }} inverted>
               Example Commands:
               <ul>
-              <p style={{ color: 'green', fontSize: '20px', margin: '15px' }}>
+                <p style={{ color: 'green', fontSize: '20px', margin: '15px' }}>
                   Click the 'Speak' button to give a command
                 </p>
                 <p style={{ fontSize: '20px', margin: '15px' }}>
@@ -513,7 +500,7 @@ class CodeContainer extends React.Component {
             <Segment style={{ fontSize: '50px', marginRight: '10px' }} inverted>
               {' '}
               <p style={{ fontSize: '20px', margin: '15px', color: 'red' }}>
-              Dexter - "Sorry I don't understand, please try again."
+                Dexter - "Sorry I don't understand, please try again."
               </p>{' '}
             </Segment>
           )}
@@ -542,13 +529,6 @@ class CodeContainer extends React.Component {
           <Button
             toggleListen={this.toggleListen}
             listening={this.state.listening}
-          />
-          <SaveButton
-            showSavedDisplay={this.showSavedDisplay}
-            showingSavedDisplay={this.state.showingSavedDisplay}
-            snippet={this.state.content}
-            username={this.props.username}
-            editID={this.props.editID}
           />
         </div>
       </div>
